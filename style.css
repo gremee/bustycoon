@@ -294,54 +294,132 @@ body, html { margin: 0; padding: 0; width: 100%; height: 100%; font-family: 'Seg
 #reset-btn:hover { background: #cc0000; border-color: #ff6666; }
 
 /* ========================================= */
-/* 📱 АДАПТАЦИЯ ДЛЯ ТЕЛЕФОНОВ (до 768px)     */
+/* 📱 ГЛОБАЛЬНАЯ АДАПТАЦИЯ ДЛЯ ТЕЛЕФОНОВ     */
 /* ========================================= */
 @media (max-width: 768px) {
     
-    /* 1. Усмиряем гигантскую кнопку x2 ДОХОД */
-    .reward-btn {
-        padding: 10px 15px !important; /* Возвращаем нормальные отступы */
-        font-size: 1rem !important;    /* Уменьшаем шрифт */
-        width: auto !important;
-        transform: scale(1) !important; /* Убиваем масштабирование, если оно было */
+    /* --- 1. ВЕРХНЯЯ ПАНЕЛЬ И БАЛАНС --- */
+    #header {
+        padding: 10px !important;
+        gap: 5px !important;
     }
-    
-    /* 2. Чиним всплывающие окна (чтобы не улетали за экран) */
+    #balance-display {
+        font-size: 1.8rem !important; /* Уменьшаем огромные цифры баланса */
+    }
+    #click-power-display {
+        font-size: 0.9rem !important;
+    }
+
+    /* --- 2. КНОПКИ В УГЛУ (Настройки и Бонус) --- */
+    #settings-btn {
+        width: 35px !important;
+        height: 35px !important;
+        font-size: 1.2rem !important;
+        top: 10px !important;
+        right: 10px !important;
+    }
+    #ad-bonus-container {
+        top: 55px !important; /* Опускаем бонус под шестеренку */
+        right: 10px !important;
+    }
+    .reward-btn {
+        padding: 8px 12px !important; /* Делаем кнопку бонуса компактной */
+        font-size: 0.8rem !important;
+        border-radius: 15px !important;
+    }
+
+    /* --- 3. НИЖНЯЯ ПАНЕЛЬ ИНФОРМАЦИИ (Опыт и уровень) --- */
+    #station-info {
+        bottom: 65px !important; /* Поднимаем над кнопками навигации */
+        padding: 8px !important;
+        font-size: 0.8rem !important;
+    }
+    .progress-container {
+        height: 12px !important; /* Тонкая полоска опыта */
+        margin: 5px 0 !important;
+    }
+    .progress-text {
+        font-size: 0.7rem !important;
+        line-height: 12px !important;
+    }
+
+    /* --- 4. НИЖНЕЕ МЕНЮ (НАВИГАЦИЯ) --- */
+    #bottom-nav {
+        height: 60px !important;
+        padding: 5px !important;
+        gap: 5px !important;
+    }
+    .nav-btn {
+        font-size: 0.75rem !important;
+        padding: 5px !important;
+        border-radius: 10px !important;
+        flex-direction: column !important; /* Иконка над текстом */
+    }
+    .nav-icon {
+        font-size: 1.3rem !important;
+        margin-bottom: 2px !important;
+    }
+
+    /* --- 5. ВСПЛЫВАЮЩИЕ ОКНА (Меню) --- */
     .modal-window {
         width: 95% !important;
-        height: auto !important;
-        max-height: 85vh !important; /* Ограничиваем высоту (85% от экрана) */
-        overflow-y: auto !important; /* Включаем прокрутку внутри окна */
+        max-height: 80vh !important; /* Не больше 80% высоты экрана */
         padding: 15px !important;
+        border-radius: 15px !important;
     }
-
-    /* 3. Нижняя панель навигации (чтобы кнопки влезли в 1 ряд) */
-    .nav-btn {
-        font-size: 0.8rem !important; /* Мелкий шрифт */
-        padding: 10px 5px !important;
-        flex: 1; /* Кнопки поделят ширину поровну */
-    }
-
-    /* 4. СПАСАЕМ МИНИ-ИГРЫ */
-    #minigames-window .mg-container {
-        flex-direction: column !important; /* Карточки игр идут друг под другом */
-        align-items: center !important;
+    .modal-header h3 {
+        font-size: 1.2rem !important;
     }
     
-    .mg-card {
-        width: 100% !important; /* Карточка на всю доступную ширину */
+    /* Карточки внутри окон */
+    .upgrade-card, .mg-card {
+        padding: 10px !important;
         margin-bottom: 10px !important;
     }
-
-    /* Если в мини-играх есть холст (canvas) или само игровое поле */
-    #minigame-area, .game-board, canvas {
-        width: 100% !important;
-        max-width: 100% !important;
-        height: auto !important; /* Чтобы пропорции не сплющило */
+    .upgrade-btn, .buy-bus-btn {
+        padding: 10px !important;
+        font-size: 0.9rem !important;
     }
 
-    /* Текст на стартовом экране */
-    #start-screen h1 {
-        font-size: 2.2rem !important;
+    /* --- 6. МИНИ-ИГРЫ (Полный фикс управления и экрана) --- */
+    #minigame-area {
+        width: 100vw !important;
+        height: 100vh !important; /* Растягиваем на весь экран */
+        max-width: 100% !important;
+        max-height: 100% !important;
+        top: 0 !important;
+        left: 0 !important;
+        transform: none !important;
+        border-radius: 0 !important;
+        padding: 10px !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: center !important;
+    }
+    
+    /* Игровое поле в мини-играх */
+    .game-board, canvas, #tech-screen {
+        width: 100% !important;
+        max-width: 100% !important;
+        height: auto !important;
+        max-height: 55vh !important; /* Оставляем 45% экрана под кнопки управления */
+        object-fit: contain !important;
+        margin: 0 auto 15px auto !important;
+    }
+    
+    /* Кнопки управления в мини-играх */
+    .mg-controls {
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: wrap !important;
+        gap: 10px !important;
+        width: 100% !important;
+    }
+    .mg-btn {
+        padding: 15px 10px !important;
+        font-size: 1rem !important;
+        flex: 1 1 45% !important; /* Кнопки встанут в два столбца поровну */
+        border-radius: 10px !important;
+        min-height: 50px !important; /* Чтобы было удобно нажимать пальцем */
     }
 }
