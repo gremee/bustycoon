@@ -293,81 +293,141 @@ body, html { margin: 0; padding: 0; width: 100%; height: 100%; font-family: 'Seg
 #orientation-btn:hover { border-color: #00ffcc; background: #3a3a3a; }
 #reset-btn:hover { background: #cc0000; border-color: #ff6666; }
 
-/* УЛЬТИМАТИВНЫЙ ФИКС ДЛЯ МОБИЛ (ГОРИЗОНТАЛКА) */
-@media screen and (orientation: landscape) and (max-height: 500px) {
+/* =====================================================================
+   📱 УЛЬТИМАТИВНАЯ ОПТИМИЗАЦИЯ ДЛЯ ТЕЛЕФОНОВ (ДО 768px)
+   Вставь это в самый низ твоего style.css!
+   ===================================================================== */
+@media screen and (max-width: 768px) {
     
-    /* ПРИВЕТСТВИЕ: уменьшено в 2 раза */
-    #start-screen { gap: 5px !important; }
-    #start-screen h1 { font-size: 1.4rem !important; margin: 0 !important; }
-    #start-screen p { font-size: 0.8rem !important; }
+    /* 🟢 1. СТАРТОВЫЙ ЭКРАН (Уменьшен в 2 раза) */
+    #start-screen h1 { 
+        font-size: 1.6rem !important; /* ИЗМЕНИТЬ: Размер главного желтого текста */
+    }
+    #start-screen p { 
+        font-size: 0.9rem !important; /* ИЗМЕНИТЬ: Размер подзаголовка */
+    }
     #play-btn { 
-        width: 130px !important; 
-        padding: 8px !important; 
-        font-size: 0.9rem !important; 
+        width: 150px !important;      /* ИЗМЕНИТЬ: Ширина кнопки ИГРАТЬ */
+        padding: 12px !important;     /* ИЗМЕНИТЬ: Внутренние отступы (высота) кнопки */
+        font-size: 1.1rem !important; /* ИЗМЕНИТЬ: Размер текста на кнопке */
     }
 
-    /* БАЛАНС: высота и шрифт в 2 раза меньше */
+    /* 📊 2. БАЛАНС СВЕРХУ (Сделал панель толще и удобнее) */
     #stats-panel {
         top: 0 !important;
-        height: 28px !important; /* Очень узкая полоска */
-        padding: 0 10px !important;
-        transform: translateX(-50%) !important; /* Убрал scale, просто захардкодил размеры */
-        gap: 15px !important;
-        background: rgba(0,0,0,0.9) !important;
-        border-radius: 0 0 10px 10px;
+        /* Первое число (10px) - высота сверху/снизу. Увеличь его, если хочешь панель еще толще! */
+        padding: 10px 15px !important; 
+        height: auto !important;      /* Позволяет панели растягиваться по высоте контента */
+        gap: 15px !important;         /* ИЗМЕНИТЬ: Расстояние между балансом и статистикой */
+        border-radius: 0 0 15px 15px !important; /* Закругление только нижних углов */
+        width: 95% !important;        /* Чтобы не прилипало к самым краям экрана */
     }
-    .stat-item { font-size: 0.8rem !important; }
-    .stat-item img { width: 14px !important; height: 14px !important; }
-
-    /* КНОПКИ МЕНЮ: уменьшены и смещены выше, чтобы не наезжать на инфо */
-    #main-navigation {
-        left: 5px !important;
-        top: 40% !important; /* Сместил выше центра */
-        transform: translateY(-50%) scale(0.6) !important;
-        transform-origin: left center;
-        gap: 5px !important;
+    .stat-item { 
+        font-size: 1.3rem !important; /* ИЗМЕНИТЬ: Размер текста главного баланса */
+    }
+    .stat-item.mini { 
+        font-size: 0.8rem !important; /* ИЗМЕНИТЬ: Размер текста "В сек" / "За клик" */
+    }
+    .stat-divider {
+        height: 35px !important;      /* ИЗМЕНИТЬ: Высота разделительной линии */
     }
 
-    /* ИНФОРМАЦИЯ СЛЕВА СНИЗУ: максимально компактная */
+    /* 🏢 3. ИНФОРМАЦИЯ СЛЕВА СНИЗУ (Автостанция) - теперь влазит полностью! */
     #station-footer {
-        bottom: 5px !important;
-        left: 5px !important;
-        transform: scale(0.6) !important;
-        transform-origin: bottom left;
-        background: rgba(0,0,0,0.6) !important;
-        padding: 5px !important;
-        max-width: 180px !important;
+        left: 10px !important;        /* Отступ от левого края */
+        bottom: 10px !important;      /* Отступ от нижнего края */
+        min-width: 0 !important;      /* Убиваем жесткую ширину, из-за которой резался край */
+        width: 85% !important;        /* ИЗМЕНИТЬ: Ширина плашки на телефоне */
+        max-width: 250px !important;
+        padding: 12px !important;     /* ИЗМЕНИТЬ: Отступы внутри плашки */
+    }
+    .station-details h2 { 
+        font-size: 1.2rem !important; /* ИЗМЕНИТЬ: Размер названия автостанции */
+    }
+    .station-details p, #current-bus-label { 
+        font-size: 0.95rem !important;/* ИЗМЕНИТЬ: Размер текста уровня и автобуса */
     }
 
-    /* МИНИ-ИГРА МАРШРУТ: фикс наслоения */
-    .route-game {
-        padding: 5px !important;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
+    /* 🎮 4. КНОПКИ МЕНЮ (Слева по центру - немного уменьшил, чтобы не мешали) */
+    #main-navigation {
+        left: 10px !important;
+        gap: 10px !important;
     }
-    .mg-instr {
-        position: relative !important; /* Больше не залетает под другие элементы */
-        font-size: 0.7rem !important;
-        background: #333;
-        padding: 2px 10px;
-        margin: 2px 0 !important;
-        z-index: 10;
+    .nav-btn {
+        width: 90px !important;       /* ИЗМЕНИТЬ: Ширина кнопок меню */
+        padding: 10px 5px !important; /* ИЗМЕНИТЬ: Высота кнопок */
     }
-    .route-container {
-        height: 45px !important; /* Тонкая дорога */
-        margin: 5px 0 !important;
+    .nav-btn .icon {
+        font-size: 1.4rem !important; /* ИЗМЕНИТЬ: Размер эмодзи в меню */
     }
-    .route-btn {
-        padding: 8px 30px !important;
-        font-size: 0.9rem !important;
+    .nav-btn span {
+        font-size: 0.65rem !important;/* ИЗМЕНИТЬ: Размер текста в кнопках меню */
     }
 
-    /* ОКНА МЕНЮ (Магазин и т.д.): теперь можно листать! */
-    .modal-window {
-        max-height: 90vh !important;
-        overflow-y: auto !important; /* ВКЛЮЧАЕТ СКРОЛЛ */
-        transform: translate(-50%, -50%) scale(0.8) !important;
+    /* 🧩 5. МИНИ-ИГРА "ДИСПЕТЧЕР" (Фикс огромного текста и прокрутки) */
+    #minigame-area > div { 
+        flex-direction: column !important; /* Ставим Справочник НАД игрой, а не слева */
+    }
+    /* Блок справочника (Manual) */
+    #minigame-area > div > div:first-child {
+        width: 100% !important;       /* На всю ширину экрана */
+        height: 35% !important;       /* Занимает 35% верха экрана */
+        border-right: none !important;
+        border-bottom: 2px solid #333 !important;
+        padding: 10px !important;
+    }
+    /* Основной блок игры */
+    #minigame-area > div > div:nth-child(2) {
+        height: 65% !important;       /* Занимает оставшиеся 65% снизу */
+        padding: 10px !important;
+        justify-content: flex-start !important;
+    }
+    /* Номер билета (Теперь не на пол экрана) */
+    #disp-ticket { 
+        font-size: 2.2rem !important;   /* ИЗМЕНИТЬ: Размер шрифта билета (был 4rem) */
+        letter-spacing: 5px !important; /* ИЗМЕНИТЬ: Расстояние между цифрами */
+    }
+    /* Блок с билетом (фон вокруг билета) */
+    #minigame-area > div > div:nth-child(2) > div:nth-child(3) {
+        padding: 10px !important;
+        margin-bottom: 10px !important;
+    }
+    /* Кнопки с ответами (компактнее) */
+    #disp-options {
+        gap: 8px !important;          /* ИЗМЕНИТЬ: Расстояние между кнопками ответов */
+    }
+    #disp-options button {
+        padding: 10px 5px !important; /* ИЗМЕНИТЬ: Высота кнопок ответов */
+        font-size: 0.8rem !important; /* ИЗМЕНИТЬ: Размер текста ответов */
+    }
+
+    /* 🚌 6. МИНИ-ИГРА "МАРШРУТ" (Разнес элементы, чтобы не сливались) */
+    /* Верхний инфо-блок (счет, пассажиры) */
+    #minigame-area > div:nth-of-type(1) {
+        top: 10px !important;         /* Прижимаем к самому верху */
+        padding: 10px !important;     /* Уменьшаем отступы */
+        width: 90% !important;
+    }
+    #minigame-area > div:nth-of-type(1) h2 {
+        font-size: 1.4rem !important; /* ИЗМЕНИТЬ: Название "Маршрут №42" */
+        margin-bottom: 5px !important;
+    }
+    #minigame-area > div:nth-of-type(1) p {
+        font-size: 0.85rem !important;/* ИЗМЕНИТЬ: Текст правил и инфы */
+    }
+    /* Сама дорога с автобусом */
+    #minigame-area > div:nth-of-type(2) {
+        bottom: 110px !important;     /* ИЗМЕНИТЬ: Как высоко от низа находится дорога */
+        height: 80px !important;      /* ИЗМЕНИТЬ: Толщина дороги */
+    }
+    #route-bus {
+        font-size: 3.5rem !important; /* ИЗМЕНИТЬ: Размер самого автобуса на дороге */
+        bottom: 10px !important;
+    }
+    /* Огромная кнопка "СТОП" */
+    #stop-btn {
+        bottom: 20px !important;      /* ИЗМЕНИТЬ: Расстояние кнопки от низа экрана */
+        padding: 15px 40px !important;/* ИЗМЕНИТЬ: Размеры кнопки */
+        font-size: 1.4rem !important; /* ИЗМЕНИТЬ: Размер текста на кнопке */
     }
 }
