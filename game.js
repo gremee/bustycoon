@@ -793,6 +793,7 @@ function startTechInspectionGame() {
         </div>
     `;
     document.body.appendChild(gameArea);
+	injectMobileDispatcherHint();
 	
 	function injectMobileDispatcherHint() {
     if (window.innerWidth > 520) return; // только мобил
