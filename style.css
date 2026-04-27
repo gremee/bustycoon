@@ -431,3 +431,64 @@ body, html { margin: 0; padding: 0; width: 100%; height: 100%; font-family: 'Seg
         font-size: 1.4rem !important; /* ИЗМЕНИТЬ: Размер текста на кнопке */
     }
 }
+
+/* 🔧 ГЛОБАЛЬНЫЕ НАСТРОЙКИ РАЗМЕРОВ (МЕНЯЙ ТУТ) */
+:root {
+    /* Панель баланса */
+    --stats-width: 450px;   /* Ширина панели баланса */
+    --stats-height: 80px;   /* Высота панели баланса */
+    --stats-top: 20px;      /* Отступ сверху */
+    --stats-font: 2.2rem;   /* Размер цифр баланса */
+
+    /* Кнопка x2 */
+    --x2-scale: 0.6;        /* Размер кнопки дохода (0.5 = в 2 раза меньше) */
+    
+    /* Приветствие и обучение */
+    --modal-scale: 0.85;    /* Масштаб окон обучения */
+}
+
+/* Применяем переменные к балансу */
+#stats-panel {
+    width: var(--stats-width) !important;
+    height: var(--stats-height) !important;
+    top: var(--stats-top) !important;
+}
+.stat-item { font-size: var(--stats-font) !important; }
+
+/* Уменьшаем кнопку x2 */
+.reward-btn {
+    transform: scale(var(--x2-scale)) !important;
+    transform-origin: right top;
+}
+
+/* 🟢 ФИКС ПРИВЕТСТВИЯ (Компактность) */
+#start-screen h1 { font-size: 2.2rem; } /* Уменьшил заголовок */
+#start-screen p { font-size: 0.9rem; }
+#play-btn { width: 180px; padding: 12px; font-size: 1.2rem; }
+
+/* 🎓 ФИКС ОБУЧЕНИЯ */
+#tutorial-window {
+    transform: translate(-50%, -50%) scale(var(--modal-scale)) !important;
+}
+#tutorial-window .modal-content { padding: 10px; font-size: 0.9rem; }
+
+/* 📱 МОБИЛЬНЫЙ РЕЖИМ (Landscape) */
+@media screen and (orientation: landscape) and (max-height: 500px) {
+    #stats-panel {
+        --stats-width: 300px;
+        --stats-height: 35px;
+        --stats-top: 5px;
+        --stats-font: 1rem;
+    }
+    
+    /* Сдвигаем инфо-панель ниже, чтобы не мешала кнопкам */
+    #station-footer {
+        bottom: 5px !important;
+        z-index: 5 !important; /* Ниже кнопок меню */
+    }
+    
+    #main-navigation {
+        z-index: 20 !important; /* Кнопки всегда сверху */
+        transform: translateY(-50%) scale(0.7) !important;
+    }
+}
