@@ -293,202 +293,79 @@ body, html { margin: 0; padding: 0; width: 100%; height: 100%; font-family: 'Seg
 #orientation-btn:hover { border-color: #00ffcc; background: #3a3a3a; }
 #reset-btn:hover { background: #cc0000; border-color: #ff6666; }
 
-/* =====================================================================
-   📱 УЛЬТИМАТИВНАЯ ОПТИМИЗАЦИЯ ДЛЯ ТЕЛЕФОНОВ (ДО 768px)
-   Вставь это в самый низ твоего style.css!
-   ===================================================================== */
-@media screen and (max-width: 768px) {
+/* =========================================
+   📱 УЛЬТИМАТИВНЫЙ ФИКС (ГОРИЗОНТАЛКА)
+   ========================================= */
+@media screen and (orientation: landscape) and (max-height: 500px) {
     
-    /* 🟢 1. СТАРТОВЫЙ ЭКРАН (Уменьшен в 2 раза) */
-    #start-screen h1 { 
-        font-size: 1.6rem !important; /* ИЗМЕНИТЬ: Размер главного желтого текста */
+    /* 1. ПРИВЕТСТВИЕ: Теперь это маленькое окно по центру, а не весь экран */
+    #start-screen {
+        width: 320px !important;
+        height: 180px !important;
+        top: 50% !important;
+        left: 50% !important;
+        transform: translate(-50%, -50%) !important;
+        border-radius: 15px;
+        background: rgba(0, 0, 0, 0.95);
+        border: 2px solid #ffd700;
+        box-shadow: 0 0 30px rgba(0,0,0,1);
     }
-    #start-screen p { 
-        font-size: 0.9rem !important; /* ИЗМЕНИТЬ: Размер подзаголовка */
-    }
-    #play-btn { 
-        width: 150px !important;      /* ИЗМЕНИТЬ: Ширина кнопки ИГРАТЬ */
-        padding: 12px !important;     /* ИЗМЕНИТЬ: Внутренние отступы (высота) кнопки */
-        font-size: 1.1rem !important; /* ИЗМЕНИТЬ: Размер текста на кнопке */
-    }
+    #start-screen h1 { font-size: 1.2rem !important; margin: 5px 0 !important; }
+    #start-screen p { font-size: 0.7rem !important; }
+    #play-btn { width: 120px !important; padding: 8px !important; font-size: 0.9rem !important; }
 
-    /* 📊 2. БАЛАНС СВЕРХУ (Сделал панель толще и удобнее) */
+    /* 2. БАЛАНС: Шрифт меньше, высота фиксированная, ничего не скрыто */
     #stats-panel {
         top: 0 !important;
-        /* Первое число (10px) - высота сверху/снизу. Увеличь его, если хочешь панель еще толще! */
-        padding: 10px 15px !important; 
-        height: auto !important;      /* Позволяет панели растягиваться по высоте контента */
-        gap: 15px !important;         /* ИЗМЕНИТЬ: Расстояние между балансом и статистикой */
-        border-radius: 0 0 15px 15px !important; /* Закругление только нижних углов */
-        width: 95% !important;        /* Чтобы не прилипало к самым краям экрана */
-    }
-    .stat-item { 
-        font-size: 1.3rem !important; /* ИЗМЕНИТЬ: Размер текста главного баланса */
-    }
-    .stat-item.mini { 
-        font-size: 0.8rem !important; /* ИЗМЕНИТЬ: Размер текста "В сек" / "За клик" */
-    }
-    .stat-divider {
-        height: 35px !important;      /* ИЗМЕНИТЬ: Высота разделительной линии */
-    }
-
-    /* 🏢 3. ИНФОРМАЦИЯ СЛЕВА СНИЗУ (Автостанция) - теперь влазит полностью! */
-    #station-footer {
-        left: 10px !important;        /* Отступ от левого края */
-        bottom: 10px !important;      /* Отступ от нижнего края */
-        min-width: 0 !important;      /* Убиваем жесткую ширину, из-за которой резался край */
-        width: 85% !important;        /* ИЗМЕНИТЬ: Ширина плашки на телефоне */
-        max-width: 250px !important;
-        padding: 12px !important;     /* ИЗМЕНИТЬ: Отступы внутри плашки */
-    }
-    .station-details h2 { 
-        font-size: 1.2rem !important; /* ИЗМЕНИТЬ: Размер названия автостанции */
-    }
-    .station-details p, #current-bus-label { 
-        font-size: 0.95rem !important;/* ИЗМЕНИТЬ: Размер текста уровня и автобуса */
-    }
-
-    /* 🎮 4. КНОПКИ МЕНЮ (Слева по центру - немного уменьшил, чтобы не мешали) */
-    #main-navigation {
-        left: 10px !important;
+        height: 25px !important;
+        width: auto !important;
+        min-width: 200px;
+        padding: 0 15px !important;
+        transform: translateX(-50%) !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
         gap: 10px !important;
     }
-    .nav-btn {
-        width: 90px !important;       /* ИЗМЕНИТЬ: Ширина кнопок меню */
-        padding: 10px 5px !important; /* ИЗМЕНИТЬ: Высота кнопок */
+    .stat-item { font-size: 0.75rem !important; white-space: nowrap !important; }
+    .stat-item img { width: 12px !important; height: 12px !important; }
+
+    /* 3. ДИСПЕТЧЕР: Справочник СЛЕВА, Билеты СПРАВА */
+    .tech-inspection-game {
+        display: flex !important;
+        flex-direction: row !important; /* Горизонтальное деление */
+        width: 95vw !important;
+        height: 85vh !important;
+        gap: 10px !important;
+        padding: 5px !important;
     }
-    .nav-btn .icon {
-        font-size: 1.4rem !important; /* ИЗМЕНИТЬ: Размер эмодзи в меню */
+    /* Левая часть (Справочник) */
+    .tech-guide {
+        width: 40% !important;
+        height: 100% !important;
+        font-size: 0.7rem !important;
+        overflow-y: auto;
     }
-    .nav-btn span {
-        font-size: 0.65rem !important;/* ИЗМЕНИТЬ: Размер текста в кнопках меню */
+    /* Правая часть (Билет) */
+    .tech-card {
+        width: 60% !important;
+        height: 100% !important;
+        margin: 0 !important;
+        padding: 5px !important;
     }
 
-    /* 🧩 5. МИНИ-ИГРА "ДИСПЕТЧЕР" (Фикс огромного текста и прокрутки) */
-    #minigame-area > div { 
-        flex-direction: column !important; /* Ставим Справочник НАД игрой, а не слева */
-    }
-    /* Блок справочника (Manual) */
-    #minigame-area > div > div:first-child {
-        width: 100% !important;       /* На всю ширину экрана */
-        height: 35% !important;       /* Занимает 35% верха экрана */
-        border-right: none !important;
-        border-bottom: 2px solid #333 !important;
-        padding: 10px !important;
-    }
-    /* Основной блок игры */
-    #minigame-area > div > div:nth-child(2) {
-        height: 65% !important;       /* Занимает оставшиеся 65% снизу */
-        padding: 10px !important;
-        justify-content: flex-start !important;
-    }
-    /* Номер билета (Теперь не на пол экрана) */
-    #disp-ticket { 
-        font-size: 2.2rem !important;   /* ИЗМЕНИТЬ: Размер шрифта билета (был 4rem) */
-        letter-spacing: 5px !important; /* ИЗМЕНИТЬ: Расстояние между цифрами */
-    }
-    /* Блок с билетом (фон вокруг билета) */
-    #minigame-area > div > div:nth-child(2) > div:nth-child(3) {
-        padding: 10px !important;
-        margin-bottom: 10px !important;
-    }
-    /* Кнопки с ответами (компактнее) */
-    #disp-options {
-        gap: 8px !important;          /* ИЗМЕНИТЬ: Расстояние между кнопками ответов */
-    }
-    #disp-options button {
-        padding: 10px 5px !important; /* ИЗМЕНИТЬ: Высота кнопок ответов */
-        font-size: 0.8rem !important; /* ИЗМЕНИТЬ: Размер текста ответов */
+    /* 4. КНОПКИ МЕНЮ: Поднял еще выше */
+    #main-navigation {
+        left: 5px !important;
+        top: 35% !important;
+        transform: translateY(-50%) scale(0.5) !important;
     }
 
-    /* 🚌 6. МИНИ-ИГРА "МАРШРУТ" (Разнес элементы, чтобы не сливались) */
-    /* Верхний инфо-блок (счет, пассажиры) */
-    #minigame-area > div:nth-of-type(1) {
-        top: 10px !important;         /* Прижимаем к самому верху */
-        padding: 10px !important;     /* Уменьшаем отступы */
-        width: 90% !important;
-    }
-    #minigame-area > div:nth-of-type(1) h2 {
-        font-size: 1.4rem !important; /* ИЗМЕНИТЬ: Название "Маршрут №42" */
-        margin-bottom: 5px !important;
-    }
-    #minigame-area > div:nth-of-type(1) p {
-        font-size: 0.85rem !important;/* ИЗМЕНИТЬ: Текст правил и инфы */
-    }
-    /* Сама дорога с автобусом */
-    #minigame-area > div:nth-of-type(2) {
-        bottom: 110px !important;     /* ИЗМЕНИТЬ: Как высоко от низа находится дорога */
-        height: 80px !important;      /* ИЗМЕНИТЬ: Толщина дороги */
-    }
-    #route-bus {
-        font-size: 3.5rem !important; /* ИЗМЕНИТЬ: Размер самого автобуса на дороге */
-        bottom: 10px !important;
-    }
-    /* Огромная кнопка "СТОП" */
-    #stop-btn {
-        bottom: 20px !important;      /* ИЗМЕНИТЬ: Расстояние кнопки от низа экрана */
-        padding: 15px 40px !important;/* ИЗМЕНИТЬ: Размеры кнопки */
-        font-size: 1.4rem !important; /* ИЗМЕНИТЬ: Размер текста на кнопке */
-    }
-}
-
-/* 🔧 ГЛОБАЛЬНЫЕ НАСТРОЙКИ РАЗМЕРОВ (МЕНЯЙ ТУТ) */
-:root {
-    /* Панель баланса */
-    --stats-width: 450px;   /* Ширина панели баланса */
-    --stats-height: 80px;   /* Высота панели баланса */
-    --stats-top: 20px;      /* Отступ сверху */
-    --stats-font: 2.2rem;   /* Размер цифр баланса */
-
-    /* Кнопка x2 */
-    --x2-scale: 0.6;        /* Размер кнопки дохода (0.5 = в 2 раза меньше) */
-    
-    /* Приветствие и обучение */
-    --modal-scale: 0.85;    /* Масштаб окон обучения */
-}
-
-/* Применяем переменные к балансу */
-#stats-panel {
-    width: var(--stats-width) !important;
-    height: var(--stats-height) !important;
-    top: var(--stats-top) !important;
-}
-.stat-item { font-size: var(--stats-font) !important; }
-
-/* Уменьшаем кнопку x2 */
-.reward-btn {
-    transform: scale(var(--x2-scale)) !important;
-    transform-origin: right top;
-}
-
-/* 🟢 ФИКС ПРИВЕТСТВИЯ (Компактность) */
-#start-screen h1 { font-size: 2.2rem; } /* Уменьшил заголовок */
-#start-screen p { font-size: 0.9rem; }
-#play-btn { width: 180px; padding: 12px; font-size: 1.2rem; }
-
-/* 🎓 ФИКС ОБУЧЕНИЯ */
-#tutorial-window {
-    transform: translate(-50%, -50%) scale(var(--modal-scale)) !important;
-}
-#tutorial-window .modal-content { padding: 10px; font-size: 0.9rem; }
-
-/* 📱 МОБИЛЬНЫЙ РЕЖИМ (Landscape) */
-@media screen and (orientation: landscape) and (max-height: 500px) {
-    #stats-panel {
-        --stats-width: 300px;
-        --stats-height: 35px;
-        --stats-top: 5px;
-        --stats-font: 1rem;
-    }
-    
-    /* Сдвигаем инфо-панель ниже, чтобы не мешала кнопкам */
+    /* 5. ИНФОРМАЦИЯ СЛЕВА СНИЗУ */
     #station-footer {
         bottom: 5px !important;
-        z-index: 5 !important; /* Ниже кнопок меню */
-    }
-    
-    #main-navigation {
-        z-index: 20 !important; /* Кнопки всегда сверху */
-        transform: translateY(-50%) scale(0.7) !important;
+        left: 5px !important;
+        transform: scale(0.55) !important;
+        max-width: 150px !important;
     }
 }
