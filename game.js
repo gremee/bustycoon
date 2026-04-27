@@ -885,30 +885,6 @@ function startTechInspectionGame() {
         if (e.key === 'Enter') document.getElementById('di-submit').click();
     });
 }
-    function showQuestion() {
-        if (!gameActive) return;
-        if (nextQuestionTimeout) clearTimeout(nextQuestionTimeout);
-        
-        currentQ = generateQuestion();
-        questionStartTime = Date.now();
-        const tickEl = document.getElementById('disp-ticket');
-        if (tickEl) { tickEl.style.opacity='0'; setTimeout(() => { tickEl.innerText=currentQ.num; tickEl.style.transition='opacity 0.2s'; tickEl.style.opacity='1'; },100); }
-        const optEl = document.getElementById('disp-options');
-        if (optEl) {
-            optEl.innerHTML = '';
-            currentQ.options.forEach(opt => {
-                const btn = document.createElement('button');
-                btn.innerHTML = `<span style="font-size:0.92rem;line-height:1.4;">${opt}</span>`;
-                btn.style.cssText = 'background:rgba(255,255,255,0.07);border:2px solid #444;border-radius:12px;color:white;padding:14px 10px;cursor:pointer;font-size:0.9rem;text-align:center;transition:all 0.15s;line-height:1.4;';
-                btn.onmouseenter = () => { btn.style.borderColor='#ffd700'; btn.style.background='rgba(255,215,0,0.1)'; };
-                btn.onmouseleave = () => { btn.style.borderColor='#444'; btn.style.background='rgba(255,255,255,0.07)'; };
-                btn.onclick = () => answerQuestion(opt, btn);
-                optEl.appendChild(btn);
-            });
-        }
-        const fb = document.getElementById('disp-feedback');
-        if (fb) fb.innerText = '';
-    }
 
     function answerQuestion(chosen, btnEl) {
         if (!gameActive) return;
@@ -969,9 +945,6 @@ function startTechInspectionGame() {
             setTimeout(() => endDispatcherGame(score, misses, speedBonus, baseReward), 400);
         }
     }, 1000);
-
-    showQuestion();
-}
 
 function endDispatchGame(score, misses) {
     const reward = score * 10;
