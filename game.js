@@ -239,89 +239,6 @@ let lastClickTime = 0;
 let gameStarted = false;
 let loopsStarted = false;
 
-// ==========================================
-// 🎮 МИНИ-ИГРЫ: УТИЛИТЫ
-// ==========================================
-
-// Переменные для мини-игр
-let dispatchHintOpen = false;
-let routeGameActive = false;
-let routeBusPos = 10;
-let routeStopZones = [];
-let routeScore = 0;
-let routeLives = 3;
-let routeGameLoop = null;
-
-// Переключение справочника в Диспетчере
-function toggleDispatchHint() {
-    const panel = document.getElementById('dispatch-hint-panel');
-    if (panel) {
-        panel.classList.toggle('open');
-        dispatchHintOpen = panel.classList.contains('open');
-    }
-}
-
-// Закрытие игры Диспетчер
-function closeDispatchGame() {
-    const gameEl = document.getElementById('tech-inspection-game');
-    if (gameEl) {
-        gameEl.classList.remove('active');
-        setTimeout(() => gameEl.remove(), 300);
-    }
-    document.getElementById('overlay')?.classList.remove('active');
-}
-
-// Закрытие игры Маршрут
-function closeRouteGame() {
-    routeGameActive = false;
-    if (routeGameLoop) clearInterval(routeGameLoop);
-    
-    const gameEl = document.getElementById('route-game');
-    if (gameEl) {
-        gameEl.classList.remove('active');
-        setTimeout(() => gameEl.remove(), 300);
-    }
-    document.getElementById('overlay')?.classList.remove('active');
-}
-
-// Генерация названия остановки
-function getNextStopName() {
-    const stops = ["Слободость", "Рынок", "Вокзал", "Парк", "Аэропорт", "Центр", "Школа", "Больница"];
-    return stops[Math.floor(Math.random() * stops.length)];
-}
-
-// Показ всплывающего результата в Маршруте
-function showRouteResult(emoji, text, bonus) {
-    const track = document.getElementById('rg-track');
-    if (!track) return;
-    
-    const popup = document.createElement('div');
-    popup.className = 'route-result-popup';
-    popup.innerHTML = `
-        <div class="rp-emoji">${emoji}</div>
-        <div class="rp-text">${text}</div>
-        <div class="rp-bonus">${bonus}</div>
-    `;
-    track.appendChild(popup);
-    setTimeout(() => popup.remove(), 1200);
-}
-
-// Потеря жизни в Маршруте
-function loseLife() {
-    routeLives--;
-    const livesEl = document.getElementById('rg-lives');
-    if (livesEl) {
-        livesEl.innerText = '❤️'.repeat(routeLives) + '🖤'.repeat(3 - routeLives);
-    }
-    if (routeLives <= 0) {
-        setTimeout(() => {
-            showRouteResult('🏁', 'Маршрут завершён!', `+${routeScore * 10} ₽`);
-            balance += routeScore * 10;
-            updateUI();
-            closeRouteGame();
-        }, 500);
-    }
-}
 // 🎛️ НАСТРОЙКИ
 let settings = { musicVol: 0.4, sfxVol: 0.2 };
 
@@ -773,118 +690,134 @@ window.addEventListener('DOMContentLoaded', () => {
 function startTechInspectionGame() {
     closeAllMenus();
     document.getElementById('overlay').classList.add('active');
-    
-    const container = document.getElementById('game-container');
-    
-    // Создаём оверлей игры
-    const gameEl = document.createElement('div');
-    gameEl.id = 'tech-inspection-game';
-    gameEl.className = 'active';
-    gameEl.innerHTML = `
-        <div class="dispatch-game-area">
-            <div class="dispatch-header">
-                <div class="dh-item">
-                    <div class="dh-label">Время</div>
-                    <div class="dh-val" id="di-timer">45</div>
-                </div>
-                <div class="dh-item">
-                    <div class="dh-label">Счёт</div>
-                    <div class="dh-val" id="di-score">0</div>
-                </div>
-                <div class="dh-item">
-                    <div class="dh-label">Промахи</div>
-                    <div class="dh-val" id="di-misses">0/2</div>
-                </div>
-                <button onclick="closeDispatchGame()" 
-                    style="background:none;border:1px solid #555;color:#fff;
-                           border-radius:6px;padding:4px 10px;cursor:pointer;">✕</button>
-            </div>
-            
-            <div class="dispatch-body">
-                <div class="dispatch-task">
-                    <p>Введите код маршрута:</p>
-                    <input type="text" id="di-input" maxlength="3" placeholder="А-01" 
-                           style="width:100%;padding:12px;font-size:1.2rem;text-align:center;
-                                  background:#222;border:2px solid #ffd700;border-radius:10px;
-                                  color:#ffd700;margin:10px 0;">
-                </div>
-                <button id="di-submit" 
-                    style="width:100%;padding:15px;font-size:1.1rem;background:#28a745;
-                           color:white;border:none;border-radius:10px;cursor:pointer;font-weight:bold;">
-                    ПРОВЕРИТЬ
-                </button>
-                <div id="di-feedback" style="margin-top:15px;text-align:center;font-weight:bold;"></div>
-            </div>
-        </div>
+    // ✅ УМЕНЬШЕНО В 4 РАЗА: было *120, стало *30
+    const baseReward = getSecPower() * 30;
+    const rewardPerTicket = Math.floor(baseReward / 15);
+
+    const t = i18n[currentLang]; 
+    const cities = t.cities; 
+    const busTypesArr = t.types;
+
+    function generateQuestion() {
+        const d1 = Math.floor(Math.random() * 10);
+        let d2 = Math.floor(Math.random() * 10);
+        while (d2 === d1) d2 = Math.floor(Math.random() * 10);
+        const d3 = Math.floor(Math.random() * 10);
         
-        <!-- СПРАВОЧНИК: кнопка-рычаг -->
-        <button class="dispatch-hint-toggle" id="hint-toggle-btn" onclick="toggleDispatchHint()">📋</button>
-        
-        <!-- СПРАВОЧНИК: панель -->
-        <div class="dispatch-hint" id="dispatch-hint-panel">
-            <h4>📖 Справочник маршрутов</h4>
-            <div class="hint-row"><span class="hint-code">А-01</span><span class="hint-val">Центр → Вокзал</span></div>
-            <div class="hint-row"><span class="hint-code">Б-14</span><span class="hint-val">Рынок → Аэропорт</span></div>
-            <div class="hint-row"><span class="hint-code">В-23</span><span class="hint-val">Парк → Школа</span></div>
-            <div class="hint-row"><span class="hint-code">Г-07</span><span class="hint-val">Больница → Центр</span></div>
-            <div class="hint-row"><span class="hint-code">Д-31</span><span class="hint-val">Вокзал → Рынок</span></div>
-            <button onclick="toggleDispatchHint()" 
-                style="margin-top:12px;width:100%;padding:8px;background:#333;
-                       color:#ffd700;border:1px solid #ffd700;border-radius:8px;cursor:pointer;">
-                ✕ Закрыть
-            </button>
+        // Логика выбора типа (как у тебя в коде, но берем из массива словаря)
+        let typeStr = "";
+        if (d3 === 1 || d3 === 2) typeStr = busTypesArr[0]; // Пригородный
+        else if (d3 >= 3 && d3 <= 5) typeStr = busTypesArr[1]; // Городской
+        else if (d3 >= 6 && d3 <= 8) typeStr = busTypesArr[2]; // Межобластной
+        else typeStr = busTypesArr[3]; // Скоростной
+
+        const correct = `${cities[d1]} → ${cities[d2]} (${typeStr})`;
+        const wrongs = new Set();
+        while (wrongs.size < 3) {
+            const w1 = Math.floor(Math.random() * 10);
+            let w2 = Math.floor(Math.random() * 10);
+            while (w2 === w1) w2 = Math.floor(Math.random() * 10);
+            const w3 = Math.floor(Math.random() * busTypesArr.length);
+			const wrong = `${cities[w1]} → ${cities[w2]} (${busTypesArr[w3]})`;
+            if (wrong !== correct) wrongs.add(wrong);
+        }
+        return { num: `${d1}${d2}${d3}`, correct, options: [correct, ...wrongs].sort(() => Math.random() - 0.5) };
+    }
+
+    let score = 0, misses = 0, timeLeft = 45, gameActive = true;
+    let streak = 0, speedBonus = 0, currentQ = null, questionStartTime = 0;
+    let nextQuestionTimeout = null;
+
+    const gameArea = document.createElement('div');
+    gameArea.id = 'minigame-area';
+    gameArea.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.95);z-index:2000;overflow:hidden;';
+
+    gameArea.innerHTML = `
+		<button onclick="forceCloseMinigame()" style="position:absolute;top:15px;right:20px;background:none;border:none;color:white;font-size:2.5rem;cursor:pointer;z-index:9999;">×</button>
+        <div style="display:flex;width:100%;height:100%;">
+            <div style="width:200px;min-width:200px;height:100%;background:rgba(255,255,255,0.04);border-right:1px solid #333;padding:18px;overflow-y:auto;flex-shrink:0;">
+                <p style="color:#ffd700;font-weight:bold;font-size:1rem;margin:0 0 14px;text-align:center;">📖 ${t.dispManual}</p>
+                <p style="color:#aaa;font-size:0.75rem;margin:0 0 8px;text-transform:uppercase;">${t.dispFrom}</p>
+                ${cities.map((v, k) => `<div style="display:flex;align-items:center;gap:8px;margin:4px 0;"><span style="background:#333;color:#ffd700;width:24px;height:24px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:0.85rem;flex-shrink:0;">${k}</span><span style="color:#ddd;font-size:0.88rem;">${v}</span></div>`).join('')}
+                <div style="border-top:1px solid #444;margin:14px 0;"></div>
+                <p style="color:#aaa;font-size:0.75rem;margin:0 0 6px;text-transform:uppercase;">${t.dispType}</p>
+				${[
+					['1-2', '#4caf50', t.types[0]],
+					['3-5', '#2196f3', t.types[1]],
+					['6-8', '#ff9800', t.types[2]],
+					['9-0', '#e91e63', t.types[3]]
+				].map(([k, c, v]) => `
+					<div style="display:flex;align-items:center;gap:8px;margin:4px 0;">
+						<span style="background:#333;color:#ffd700;width:30px;height:24px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:0.75rem;flex-shrink:0;">${k}</span>
+						<span style="color:${c};font-size:0.85rem;">${v}</span>
+					</div>
+`).join('')}
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;padding:20px;overflow-y:auto;">
+                <div style="text-align:center;margin-bottom:18px;">
+                    <h2 style="color:#ffd700;font-size:1.8rem;margin:0;">📋 ${t.mgDispName.toUpperCase()}</h2>
+                    <p style="color:#888;font-size:0.85rem;margin:5px 0 0;">${t.mgDispDesc}</p>
+                </div>
+                <div style="display:flex;gap:14px;margin-bottom:18px;flex-wrap:wrap;justify-content:center;">
+                    <div style="background:rgba(255,255,255,0.07);padding:8px 20px;border-radius:20px;text-align:center;min-width:75px;">
+                        <div style="color:#aaa;font-size:0.7rem;">${t.dispScore}</div>
+                        <div id="disp-score" style="color:#ffd700;font-size:1.4rem;font-weight:bold;">0</div>
+                    </div>
+                    <div style="background:rgba(255,255,255,0.07);padding:8px 20px;border-radius:20px;text-align:center;min-width:75px;">
+                        <div style="color:#aaa;font-size:0.7rem;">${t.dispTime}</div>
+                        <div id="disp-timer" style="color:#ff9800;font-size:1.4rem;font-weight:bold;">${t.dispTime}</div>
+                    </div>
+                    <div style="background:rgba(255,255,255,0.07);padding:8px 20px;border-radius:20px;text-align:center;min-width:75px;">
+                        <div style="color:#aaa;font-size:0.7rem;">${t.dispMiss}</div>
+                        <div id="disp-misses" style="color:#ff4444;font-size:1.4rem;font-weight:bold;">0/2</div>
+                    </div>
+                    <div style="background:rgba(255,255,255,0.07);padding:8px 20px;border-radius:20px;text-align:center;min-width:75px;">
+                        <div style="color:#aaa;font-size:0.7rem;">${t.dispCombo}</div>
+                        <div id="disp-streak" style="color:#4caf50;font-size:1.4rem;font-weight:bold;">x1</div>
+                    </div>
+                    <div style="background:rgba(255,215,0,0.1);padding:8px 20px;border-radius:20px;text-align:center;min-width:90px;border:1px solid #ffd700;">
+                        <div style="color:#ffd700;font-size:0.65rem;">${t.dispBest}</div>
+                        <div style="color:#ffd700;font-size:1.2rem;font-weight:bold;">${miniGameStats.dispatcher.bestStreak}</div>
+                    </div>
+                </div>
+                <div style="background:linear-gradient(135deg,#1a1a2e,#16213e);border:2px solid #ffd700;border-radius:16px;padding:22px 40px;text-align:center;margin-bottom:18px;width:100%;max-width:420px;">
+                    <div style="color:#aaa;font-size:0.78rem;letter-spacing:2px;margin-bottom:8px;">${t.mgRouteName} №</div>
+                    <div id="disp-ticket" style="font-size:4rem;font-weight:bold;color:#ffd700;letter-spacing:14px;font-family:monospace;text-shadow:0 0 10px rgba(255,215,0,0.4);">---</div>
+                </div>
+                <div id="disp-options" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;width:100%;max-width:560px;"></div>
+                <div id="disp-feedback" style="height:30px;margin-top:14px;font-size:1rem;font-weight:bold;text-align:center;"></div>
+                <div style="margin-top:16px;padding:12px 20px;background:rgba(76,175,80,0.1);border-radius:10px;border:1px solid #4caf50;text-align:center;">
+                    <span style="color:#4caf50;font-weight:bold;">💰 ~${formatMoney(baseReward)} ₽ &nbsp;|&nbsp; ${t.dispHint}</span>
+                </div>
+            </div>
         </div>
     `;
-    container.appendChild(gameEl);
-    
-    // Логика игры
-    let score = 0, misses = 0, timeLeft = 45, gameActive = true;
-    const correctCodes = ['А-01', 'Б-14', 'В-23', 'Г-07', 'Д-31'];
-    
-    const timerInterval = setInterval(() => {
+    document.body.appendChild(gameArea);
+
+    function showQuestion() {
         if (!gameActive) return;
-        timeLeft--;
-        document.getElementById('di-timer').innerText = timeLeft;
-        if (timeLeft <= 0) {
-            gameActive = false;
-            clearInterval(timerInterval);
-            endDispatchGame(score, misses);
-        }
-    }, 1000);
-    
-    document.getElementById('di-submit').addEventListener('click', () => {
-        if (!gameActive) return;
-        const input = document.getElementById('di-input').value.toUpperCase();
-        const feedback = document.getElementById('di-feedback');
+        if (nextQuestionTimeout) clearTimeout(nextQuestionTimeout);
         
-        if (correctCodes.includes(input)) {
-            score++;
-            feedback.innerText = '✅ Верно! +10 ₽';
-            feedback.style.color = '#4caf50';
-            balance += 10;
-            document.getElementById('di-score').innerText = score;
-            playPurchaseSound();
-        } else {
-            misses++;
-            feedback.innerText = `❌ Неверно! Правильно: ${correctCodes[Math.floor(Math.random()*correctCodes.length)]}`;
-            feedback.style.color = '#ff4444';
-            document.getElementById('di-misses').innerText = `${misses}/2`;
-            if (misses >= 2) {
-                gameActive = false;
-                clearInterval(timerInterval);
-                setTimeout(() => endDispatchGame(score, misses), 500);
-                return;
-            }
+        currentQ = generateQuestion();
+        questionStartTime = Date.now();
+        const tickEl = document.getElementById('disp-ticket');
+        if (tickEl) { tickEl.style.opacity='0'; setTimeout(() => { tickEl.innerText=currentQ.num; tickEl.style.transition='opacity 0.2s'; tickEl.style.opacity='1'; },100); }
+        const optEl = document.getElementById('disp-options');
+        if (optEl) {
+            optEl.innerHTML = '';
+            currentQ.options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.innerHTML = `<span style="font-size:0.92rem;line-height:1.4;">${opt}</span>`;
+                btn.style.cssText = 'background:rgba(255,255,255,0.07);border:2px solid #444;border-radius:12px;color:white;padding:14px 10px;cursor:pointer;font-size:0.9rem;text-align:center;transition:all 0.15s;line-height:1.4;';
+                btn.onmouseenter = () => { btn.style.borderColor='#ffd700'; btn.style.background='rgba(255,215,0,0.1)'; };
+                btn.onmouseleave = () => { btn.style.borderColor='#444'; btn.style.background='rgba(255,255,255,0.07)'; };
+                btn.onclick = () => answerQuestion(opt, btn);
+                optEl.appendChild(btn);
+            });
         }
-        document.getElementById('di-input').value = '';
-        updateUI();
-    });
-    
-    // Enter для отправки
-    document.getElementById('di-input').addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') document.getElementById('di-submit').click();
-    });
-}
+        const fb = document.getElementById('disp-feedback');
+        if (fb) fb.innerText = '';
+    }
 
     function answerQuestion(chosen, btnEl) {
         if (!gameActive) return;
@@ -946,129 +879,162 @@ function startTechInspectionGame() {
         }
     }, 1000);
 
-function endDispatchGame(score, misses) {
-    const reward = score * 10;
-    balance += reward;
+    showQuestion();
+}
+
+function endDispatcherGame(score, misses, speedBonus, baseReward) {
+	const t = i18n[currentLang];
+    const baseTotal = score * Math.floor(baseReward / 15);
+    const perfect = misses === 0 && score >= 8;
+    const perfectBonus = perfect ? Math.floor(baseReward * 0.5) : 0;
+    const finalReward = speedBonus + perfectBonus;
+    balance += finalReward;
     
-    const gameEl = document.getElementById('tech-inspection-game');
-    if (gameEl) {
-        gameEl.innerHTML = `
-            <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
-                        text-align:center;background:#1e1e1e;padding:40px;border-radius:20px;
-                        border:3px solid #ffd700;min-width:300px;">
-                <h2 style="color:#ffd700;margin:0 0 20px;">🏁 СМЕНА ЗАВЕРШЕНА</h2>
-                <p style="color:#ccc;">✅ Правильных: <b style="color:#00ffcc;">${score}</b></p>
-                <p style="color:#ccc;">❌ Промахов: <b style="color:#ff4444;">${misses}</b></p>
-                <p style="color:#ffd700;font-size:1.5rem;font-weight:bold;margin:20px 0;">+${reward} ₽</p>
-                <button onclick="closeDispatchGame()" 
-                    style="padding:12px 40px;background:#28a745;color:white;border:none;
-                           border-radius:10px;font-size:1.1rem;cursor:pointer;font-weight:bold;">
-                    ПРОДОЛЖИТЬ
-                </button>
+    miniGameStats.dispatcher.totalGames++;
+    if (score > miniGameStats.dispatcher.bestStreak) miniGameStats.dispatcher.bestStreak = score;
+
+    const gameArea = document.getElementById('minigame-area');
+    if (gameArea) {
+        gameArea.innerHTML = `
+            <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;background:#1e1e1e;padding:40px;border-radius:20px;border:3px solid ${perfect?'#ffd700':'#4caf50'};min-width:340px;max-width:90vw;">
+                <h2 style="color:${perfect?'#ffd700':'#4caf50'};font-size:2rem;margin:0 0 16px;">${score >= 8 ? '🏆' : '✅'} ${t.dispFinished}</h2>
+                <div style="background:#2a2a2a;border-radius:12px;padding:20px;margin:16px 0;text-align:left;">
+                    <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #333;"><span style="color:#aaa;">${t.dispTotalRoutes}</span><span style="color:#00ffcc;font-weight:bold;">${score}</span></div>
+                    <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #333;"><span style="color:#aaa;">${t.dispTotalCombo}</span><span style="color:#ffd700;font-weight:bold;">${miniGameStats.dispatcher.bestStreak}</span></div>
+                    ${speedBonus > 0 ? `<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #333;"><span style="color:#aaa;">${t.dispTotalReward}</span><span style="color:#ff9800;font-weight:bold;">+${formatMoney(speedBonus)} ₽</span></div>` : ''}
+                    <div style="display:flex;justify-content:space-between;padding:10px 0 0;"><span style="color:#fff;font-weight:bold;">${t.dispTotalReward}:</span><span style="color:#ffd700;font-size:1.5rem;font-weight:bold;">+${formatMoney(baseTotal+finalReward)} ₽</span></div>
+                </div>
+                <button onclick="closeMinigame()" style="padding:14px 0;width:100%;background:#28a745;color:white;border:none;border-radius:10px;font-size:1.1rem;font-weight:bold;cursor:pointer;">${t.continueBtn}</button>
             </div>
         `;
     }
     updateUI();
+    saveProgress();
 }
 
 // ==========================================
 // 🚌 МИНИ-ИГРА: МАРШРУТ (x4 МЕНЬШЕ НАГРАДА)
 // ==========================================
 function startRouteGame() {
+	const t = i18n[currentLang];
     closeAllMenus();
     document.getElementById('overlay').classList.add('active');
-    
-    const container = document.getElementById('game-container');
-    
-    const gameEl = document.createElement('div');
-    gameEl.id = 'route-game';
-    gameEl.className = 'active';
-    gameEl.innerHTML = `
-        <!-- Шапка с инфо -->
-        <div class="route-header">
-            <div class="rh-item">
-                <div class="rh-label">Маршрут</div>
-                <div class="rh-val" id="rg-route">№12</div>
+    // ✅ УМЕНЬШЕНО В 4 РАЗА: было *90, стало *22
+    const baseReward = getSecPower() * 22;
+    const passengersPerStop = Math.max(1, Math.floor(getSecPower() / 8));
+
+    const gameArea = document.createElement('div');
+    gameArea.id = 'minigame-area';
+    gameArea.innerHTML = `
+        <button onclick="forceCloseMinigame()" style="position:absolute;top:15px;right:20px;background:none;border:none;color:white;font-size:2.5rem;cursor:pointer;z-index:9999;">×</button>
+		<div style="position:absolute;top:20px;left:50%;transform:translateX(-50%);text-align:center;background:rgba(0,0,0,0.82);padding:15px 30px;border-radius:15px;border:2px solid #ffd700;max-width:90%;">
+            <h2 style="color:#ffd700;font-size:1.8rem;margin:0 0 8px;">${t.mgRouteName}№42</h2>
+            <p style="color:#aaa;margin:0;font-size:0.95rem;">${t.routeTask}</p>
+            <div style="display:flex;gap:30px;justify-content:center;margin-top:10px;">
+                <p style="color:#00ffcc;font-size:1.1rem;margin:0;">👥 ${t.routePassengers} <span id="passengers" style="color:#ffd700;font-weight:bold;">0</span></p>
+                <p style="color:#ff4444;font-size:1.1rem;margin:0;">❌ ${t.routeMisses}: <span id="missed" style="color:#ffd700;font-weight:bold;">0</span>/2</p>
             </div>
-            <div class="rh-item">
-                <div class="rh-label">Очки</div>
-                <div class="rh-val" id="rg-score">0</div>
+            <div style="display:flex;gap:20px;justify-content:center;margin-top:8px;">
+                <p style="color:#4caf50;font-size:0.9rem;margin:0;">💰 ${t.routeReward}: +${formatMoney(passengersPerStop*10)} ₽</p>
+                <p style="color:#ff9800;font-size:0.9rem;margin:0;">⚡ ${t.routeSpeed}: <span id="speed-display" style="font-weight:bold;">1.0</span>x</p>
             </div>
-            <div class="rh-item">
-                <div class="rh-label">Жизни</div>
-                <div class="rh-val" id="rg-lives">❤️❤️❤️</div>
-            </div>
-            <button onclick="closeRouteGame()" 
-                style="background:none;border:1px solid #555;color:#fff;
-                       border-radius:6px;padding:4px 10px;cursor:pointer;">✕</button>
+            <p style="color:#aaa;font-size:0.8rem;margin:6px 0 0;">🏆 ${t.dispTotalCombo}: <span style="color:#ffd700;font-weight:bold;">${miniGameStats.route.bestStreak}</span></p>
         </div>
-        
-        <!-- Трасса -->
-        <div class="route-track-wrapper">
-            <div class="route-track" id="rg-track">
-                <div class="route-road"></div>
-                <div class="route-road-line"></div>
-                <div class="route-bus" id="rg-bus" style="top: 10%">🚌</div>
-            </div>
+        <div style="position:absolute;bottom:200px;left:50%;transform:translateX(-50%);width:85%;height:120px;background:linear-gradient(to bottom,#555,#333);border-radius:15px;overflow:hidden;border:4px solid #666;box-shadow:0 10px 30px rgba(0,0,0,0.5);">
+            <div style="position:absolute;bottom:10px;left:0;width:100%;height:3px;background:repeating-linear-gradient(90deg,#fff 0,#fff 30px,transparent 30px,transparent 60px);"></div>
+            <div id="route-bus" style="position:absolute;left:0;bottom:20px;font-size:5rem;transition:left 0.05s linear;filter:drop-shadow(0 5px 10px rgba(0,0,0,0.5));">🚌</div>
+            <div style="position:absolute;right:120px;bottom:0;width:100px;height:100%;background:linear-gradient(to bottom,rgba(255,215,0,0.2),rgba(255,215,0,0.05));border-left:4px solid #ffd700;display:flex;align-items:center;justify-content:center;font-size:3rem;">🚏</div>
         </div>
-        
-        <!-- Большая кнопка СТОП -->
-        <button class="route-stop-btn" id="rg-stop-btn" onclick="pressStop()">
-            🛑 СТОП
-        </button>
+        <button id="stop-btn" style="position:absolute;bottom:50px;left:50%;transform:translateX(-50%);padding:25px 80px;font-size:1.8rem;background:linear-gradient(135deg,#ff9800,#f57c00);color:white;border:none;border-radius:15px;cursor:pointer;font-weight:bold;box-shadow:0 8px 25px rgba(255,152,0,0.5);transition:0.1s;">${t.routeStopBtn} 🛑</button>
+        <p style="position:absolute;bottom:20px;left:50%;transform:translateX(-50%);color:#888;font-size:0.9rem;white-space:nowrap;">${t.routeOrSpace}</p>
     `;
-    container.appendChild(gameEl);
-    
-    // Инициализация переменных
-    routeGameActive = true;
-    routeBusPos = 10;
-    routeStopZones = [];
-    routeScore = 0;
-    routeLives = 3;
-    
-    // Генерируем первую остановку
-    spawnStop(70);
-    
-    // Запускаем цикл игры
-    startRouteGameLoop();
-}
-function startRouteGameLoop() {
-    const busEl = document.getElementById('rg-bus');
-    
-    routeGameLoop = setInterval(() => {
-        if (!routeGameActive) return;
+    gameArea.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);z-index:2000;';
+    document.body.appendChild(gameArea);
+    let busPos = 0, passengers = 0, missed = 0, gameActive = true, canStop = false;
+    let currentSpeed = 1.2, speedMultiplier = 1.0;
+    let currentStreak = 0, maxStreakInGame = 0;
+    const stopPosition = 75, baseStopZone = 12;
+
+    const moveInterval = setInterval(() => {
+        if (!gameActive) return;
+        busPos += currentSpeed * speedMultiplier;
+        const busEl = document.getElementById('route-bus');
+        if (busEl) busEl.style.left = busPos + '%';
         
-        routeBusPos += 0.4;
-        if (routeBusPos > 100) {
-            routeBusPos = -10;
-            spawnStop(10 + Math.random() * 30);
+        const currentZone = baseStopZone / speedMultiplier;
+        canStop = Math.abs(busPos - stopPosition) < currentZone && busPos < stopPosition + 5;
+        
+        const btn = document.getElementById('stop-btn');
+        if (btn) {
+            if (canStop) { btn.style.background='linear-gradient(135deg,#4caf50,#388e3c)'; btn.style.boxShadow='0 8px 25px rgba(76,175,80,0.6)'; }
+            else { btn.style.background='linear-gradient(135deg,#ff9800,#f57c00)'; btn.style.boxShadow='0 8px 25px rgba(255,152,0,0.5)'; }
         }
-        if (busEl) busEl.style.top = routeBusPos + '%';
-    }, 16);
-}
-function spawnStop(posPercent) {
-    const track = document.getElementById('rg-track');
-    if (!track) return;
-    
-    const stop = document.createElement('div');
-    stop.className = 'route-stop';
-    stop.style.top = posPercent + '%';
-    stop.dataset.pos = posPercent;
-    stop.textContent = getNextStopName();
-    track.appendChild(stop);
-    routeStopZones.push({ el: stop, pos: posPercent, width: 8 });
-}
-function spawnStop(posPercent) {
-    const track = document.getElementById('rg-track');
-    if (!track) return;
-    
-    const stop = document.createElement('div');
-    stop.className = 'route-stop';
-    stop.style.top = posPercent + '%';
-    stop.dataset.pos = posPercent;
-    stop.textContent = getNextStopName();
-    track.appendChild(stop);
-    routeStopZones.push({ el: stop, pos: posPercent, width: 8 });
+        
+        if (busPos > 100) { 
+            // Игрок пропустил остановку!
+            if (currentStreak > miniGameStats.route.bestStreak) miniGameStats.route.bestStreak = currentStreak;
+            currentStreak = 0;
+            missed++;
+            const missedEl = document.getElementById('missed');
+            if (missedEl) missedEl.innerText = missed;
+            
+            if (missed >= 2) {
+                gameActive = false;
+                clearInterval(moveInterval);
+                setTimeout(() => endRouteGame(passengers, baseReward, maxStreakInGame), 500);
+            } else {
+                busPos = 0; 
+                canStop = false;
+                // Немного сбрасываем скорость после ошибки, чтобы дать шанс
+                speedMultiplier = Math.max(1.0, speedMultiplier - 0.5); 
+                const speedEl = document.getElementById('speed-display');
+                if (speedEl) speedEl.innerText = speedMultiplier.toFixed(1);
+            }
+        }
+    }, 50);
+
+    function attemptStop() {
+        if (!gameActive) return;
+        const currentZone = baseStopZone / speedMultiplier;
+        if (Math.abs(busPos - stopPosition) < currentZone && busPos < stopPosition + 5) {
+            passengers += passengersPerStop;
+            const reward = passengersPerStop * 10;
+            const speedBonus = Math.floor(reward * (speedMultiplier - 1) * 0.3);
+            const totalReward = reward + speedBonus;
+            balance += totalReward;
+            
+            currentStreak++;
+            if (currentStreak > maxStreakInGame) maxStreakInGame = currentStreak;
+            
+            document.getElementById('passengers').innerText = passengers;
+            createFloatingText(window.innerWidth/2, window.innerHeight/2-100, totalReward);
+            playPurchaseSound();
+            
+            const busEl = document.getElementById('route-bus');
+            if (busEl) { busEl.style.transform='scale(1.1)'; setTimeout(() => busEl.style.transform='scale(1)',200); }
+            
+            busPos = 0; 
+            canStop = false;
+            speedMultiplier += 0.15;
+            if (speedMultiplier > 20) speedMultiplier = 20;
+            document.getElementById('speed-display').innerText = speedMultiplier.toFixed(1);
+        } else {
+            if (currentStreak > miniGameStats.route.bestStreak) miniGameStats.route.bestStreak = currentStreak;
+            currentStreak = 0;
+            missed++;
+            document.getElementById('missed').innerText = missed;
+            if (missed >= 2) {
+                gameActive = false;
+                clearInterval(moveInterval);
+                setTimeout(() => endRouteGame(passengers, baseReward, maxStreakInGame), 500);
+            }
+        }
+    }
+
+    document.getElementById('stop-btn')?.addEventListener('click', attemptStop);
+    const spaceHandler = e => { if (e.code==='Space' && gameActive) { e.preventDefault(); attemptStop(); } };
+    document.addEventListener('keydown', spaceHandler);
+    gameArea._spaceHandler = spaceHandler;
 }
 
 function endRouteGame(passengers, baseReward, maxStreak) {
