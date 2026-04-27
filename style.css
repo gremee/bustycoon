@@ -599,3 +599,171 @@ body, html {
     .mg-card { padding: 12px; }
     .mg-card button { font-size: 0.95rem; }
 }
+
+/* 🎮 МИНИ-ИГРА: ДИСПЕТЧЕР */
+#tech-inspection-game {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.9); z-index: 1500;
+    display: none; opacity: 0; transition: opacity 0.3s;
+}
+#tech-inspection-game.active { display: block; opacity: 1; }
+
+.dispatch-game-area {
+    padding: 20px; max-width: 500px; margin: 0 auto;
+}
+.dispatch-header {
+    display: flex; justify-content: space-between; align-items: center;
+    background: #222; padding: 12px 15px; border-radius: 12px; margin-bottom: 20px;
+}
+.dh-item { text-align: center; }
+.dh-label { font-size: 0.75rem; color: #aaa; }
+.dh-val { font-size: 1.3rem; font-weight: bold; color: #ffd700; }
+
+.dispatch-body {
+    background: #1e1e1e; padding: 20px; border-radius: 15px;
+    border: 2px solid #ffd700;
+}
+.dispatch-task p { margin: 0 0 10px; color: #ccc; }
+
+.dispatch-hint-toggle {
+    position: fixed; right: 15px; top: 50%; transform: translateY(-50%);
+    width: 45px; height: 45px; border-radius: 50%;
+    background: #ffd700; border: none; font-size: 1.5rem;
+    cursor: pointer; box-shadow: 0 4px 15px rgba(255,215,0,0.4);
+    z-index: 1600; transition: transform 0.2s;
+}
+.dispatch-hint-toggle:hover { transform: translateY(-50%) scale(1.1); }
+
+.dispatch-hint {
+    position: fixed; right: -300px; top: 0; width: 280px; height: 100%;
+    background: #1a1a2e; border-left: 3px solid #ffd700;
+    padding: 20px; overflow-y: auto; transition: right 0.3s ease;
+    z-index: 1550; box-shadow: -5px 0 20px rgba(0,0,0,0.5);
+}
+.dispatch-hint.open { right: 0; }
+.dispatch-hint h4 { color: #ffd700; margin: 0 0 15px; }
+.hint-row {
+    display: flex; justify-content: space-between; padding: 8px 0;
+    border-bottom: 1px solid #333; font-size: 0.9rem;
+}
+.hint-code { color: #00ffcc; font-weight: bold; }
+.hint-val { color: #ccc; }
+
+/* 🎮 МИНИ-ИГРА: МАРШРУТ */
+#route-game {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.9); z-index: 1500;
+    display: none; opacity: 0; transition: opacity 0.3s;
+}
+#route-game.active { display: block; opacity: 1; }
+
+.route-header {
+    display: flex; justify-content: space-between; align-items: center;
+    background: #222; padding: 10px 15px; border-radius: 12px; margin: 15px;
+}
+.rh-item { text-align: center; flex: 1; }
+.rh-label { font-size: 0.7rem; color: #aaa; }
+.rh-val { font-size: 1.2rem; font-weight: bold; color: #ffd700; }
+
+.route-track-wrapper {
+    position: absolute; top: 70px; left: 0; width: 100%; height: calc(100% - 180px);
+    overflow: hidden;
+}
+.route-track {
+    position: relative; width: 100%; height: 100%;
+    background: linear-gradient(to bottom, #2a2a4a 0%, #1a1a2e 100%);
+}
+.route-road {
+    position: absolute; left: 50%; transform: translateX(-50%);
+    width: 60px; height: 100%; background: #333; border-radius: 30px;
+}
+.route-road-line {
+    position: absolute; left: 50%; transform: translateX(-50%);
+    width: 4px; height: 100%; background: repeating-linear-gradient(
+        to bottom, #ffd700 0px, #ffd700 20px, transparent 20px, transparent 40px
+    );
+}
+.route-bus {
+    position: absolute; left: 50%; transform: translateX(-50%);
+    font-size: 2.5rem; transition: top 0.05s linear; z-index: 10;
+}
+.route-stop {
+    position: absolute; left: 50%; transform: translateX(-50%);
+    background: rgba(255,215,0,0.2); border: 2px solid #ffd700;
+    border-radius: 10px; padding: 8px 15px; font-size: 0.85rem;
+    color: #ffd700; white-space: nowrap; z-index: 5;
+}
+
+.route-stop-btn {
+    position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
+    width: 80%; max-width: 300px; padding: 20px;
+    font-size: 1.5rem; background: linear-gradient(135deg, #ff9800, #f57c00);
+    color: white; border: none; border-radius: 15px; cursor: pointer;
+    font-weight: bold; box-shadow: 0 8px 25px rgba(255,152,0,0.5);
+    transition: transform 0.1s;
+}
+.route-stop-btn:active { transform: translateX(-50%) scale(0.98); }
+
+.route-result-popup {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    background: rgba(0,0,0,0.9); padding: 20px 30px; border-radius: 15px;
+    border: 2px solid #ffd700; text-align: center; z-index: 20;
+    animation: popupFade 1.2s ease-out forwards;
+}
+.rp-emoji { font-size: 2.5rem; margin-bottom: 5px; }
+.rp-text { color: #fff; font-weight: bold; margin-bottom: 5px; }
+.rp-bonus { color: #00ffcc; font-size: 1.2rem; }
+
+@keyframes popupFade {
+    0% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    100% { opacity: 0; transform: translate(-50%, -70%) scale(1.1); }
+}
+
+/* 📱 МОБИЛЬНАЯ АДАПТАЦИЯ */
+@media (max-width: 768px) {
+    #main-navigation {
+        position: fixed; bottom: 0; left: 0; width: 100%;
+        flex-direction: row; justify-content: space-around;
+        padding: 8px 0; background: rgba(20,20,20,0.95);
+        border-top: 2px solid #333; z-index: 200;
+        transform: none; top: auto;
+    }
+    .nav-btn {
+        width: 70px; padding: 10px 5px; font-size: 0.75rem;
+    }
+    .nav-btn .icon { font-size: 1.5rem; margin-bottom: 3px; }
+    
+    #stats-panel {
+        padding: 10px 20px; font-size: 1.1rem;
+    }
+    .stat-item { font-size: 1.3rem; }
+    .stat-divider { height: 30px; }
+    
+    .modal-window {
+        width: 95%; max-width: 400px;
+    }
+    
+    #station-footer {
+        bottom: 70px; left: 15px; right: 15px;
+        min-width: auto;
+    }
+    
+    #bus-wrapper {
+        bottom: 85px; right: 10px;
+    }
+    #current-bus-img {
+        max-width: 45vw; max-height: 35vh;
+    }
+    
+    .upgrade-card {
+        padding: 12px; font-size: 0.9rem;
+    }
+    
+    #ad-bonus-container {
+        right: 50%; transform: translateX(50%);
+        top: auto; bottom: 80px;
+    }
+    .reward-btn {
+        padding: 12px 20px; font-size: 1rem;
+    }
+}
