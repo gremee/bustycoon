@@ -467,3 +467,98 @@ body, html { margin: 0; padding: 0; width: 100%; height: 100%; font-family: 'Seg
         font-size: 1rem;
     }
 }
+
+/* =========================================
+   📱 УЛЬТРА-ОПТИМИЗАЦИЯ ПОД ГОРИЗОНТАЛКУ (ТЕЛЕФОНЫ)
+   ========================================= */
+@media screen and (orientation: landscape) and (max-height: 550px) {
+    
+    /* 1. СТАРТОВЫЙ ЭКРАН (Уменьшено в 2 раза) */
+    #start-screen { gap: 10px !important; }
+    #start-screen h1 { font-size: 1.6rem !important; line-height: 1 !important; }
+    #start-screen p { font-size: 0.9rem !important; }
+    #play-btn { width: 160px !important; padding: 10px !important; font-size: 1.1rem !important; }
+
+    /* 2. БАЛАНС (Вверху) */
+    #stats-panel {
+        top: 2px !important;
+        padding: 4px 10px !important;
+        gap: 10px !important;
+        transform: translateX(-50%) scale(0.6) !important;
+        transform-origin: top center;
+        white-space: nowrap !important; /* Чтобы не переносилось на новую строку */
+        z-index: 5 !important;
+    }
+
+    /* 3. НАВИГАЦИЯ (Кнопки слева) */
+    #main-navigation {
+        left: 5px !important;
+        top: 50% !important;
+        transform: translateY(-50%) scale(0.55) !important;
+        transform-origin: left center;
+        gap: 5px !important;
+        z-index: 5 !important;
+    }
+    .nav-btn { width: 110px !important; padding: 10px 5px !important; }
+
+    /* 4. ИНФО О СТАНЦИИ (Слева внизу) - Починил обрезку текста */
+    #station-footer {
+        bottom: 5px !important;
+        left: 5px !important;
+        padding: 5px 10px !important;
+        transform: scale(0.6) !important;
+        transform-origin: bottom left;
+        min-width: 220px !important; /* Дали ширину, чтобы влезло всё */
+        white-space: nowrap !important; /* Запретили перенос строк */
+        z-index: 5 !important;
+    }
+    #station-footer h3 { font-size: 1.1rem !important; margin-bottom: 2px !important; }
+    #station-footer p { font-size: 0.85rem !important; }
+
+    /* 5. ИГРА «МАРШРУТ» (Чиним наслоение и текст) */
+    #minigame-area { padding: 5px !important; z-index: 200 !important; }
+    .route-game {
+        width: 90vw !important;
+        height: auto !important;
+        max-height: 90vh !important;
+        padding: 10px !important;
+        justify-content: center !important;
+        gap: 5px !important; /* Убрали огромные дыры между дорогой и текстом */
+    }
+    .mg-instr {
+        font-size: 0.8rem !important; /* Уменьшили текст инструкции */
+        margin: 2px 0 !important;
+        line-height: 1.1 !important;
+        text-align: center;
+    }
+    .route-container {
+        height: 60px !important; /* Дорога стала тонкой */
+        margin: 5px 0 !important;
+    }
+    .bus-mini {
+        width: 40px !important;
+        height: 20px !important;
+        bottom: 5px !important;
+    }
+    .stop-line { width: 10px !important; }
+    .route-btn {
+        padding: 8px 30px !important;
+        font-size: 1rem !important;
+        margin-top: 5px !important;
+    }
+
+    /* 6. МОДАЛЬНЫЕ ОКНА (Магазин и т.д.) */
+    .modal-window {
+        max-height: 85vh !important;
+        transform: translate(-50%, -50%) scale(0.8) !important;
+        width: 320px !important;
+    }
+
+    /* 7. АВТОБУС (По центру) */
+    #bus-wrapper {
+        bottom: 2% !important;
+        right: 15% !important;
+        transform: scale(0.8) !important;
+        transform-origin: bottom right;
+    }
+}
