@@ -1,12 +1,7 @@
-/* ===== BASE RESET ===== */
 * { box-sizing: border-box; user-select: none; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; }
-body, html {
-    margin: 0; padding: 0; width: 100%; height: 100%;
-    font-family: 'Segoe UI', Tahoma, sans-serif;
-    background-color: #111; color: #fff; overflow: hidden;
-}
+body, html { margin: 0; padding: 0; width: 100%; height: 100%; font-family: 'Segoe UI', Tahoma, sans-serif; background-color: #111; color: #fff; overflow: hidden; }
 
-/* ===== СТАРТОВЫЙ ЭКРАН ===== */
+/* 🟢 СТАРТОВЫЙ ЭКРАН */
 #start-screen {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
     background: rgba(0, 0, 0, 0.98); z-index: 9999; display: flex; flex-direction: column;
@@ -15,25 +10,36 @@ body, html {
 }
 #start-screen h1 { font-size: 3.2rem; color: #ffd700; text-align: center; text-shadow: 0 0 20px rgba(255,215,0,0.4); margin: 0; line-height: 1.1; }
 #start-screen p { color: #aaa; font-size: 1.1rem; margin: 0; }
+
+/* Кнопка ИГРАТЬ с постоянной анимацией */
 #play-btn {
-    width: 240px; padding: 18px; font-size: 1.6rem; font-weight: bold;
-    background: #ffd700; color: #000; border: none; border-radius: 12px;
-    cursor: pointer; box-shadow: 0 0 25px rgba(255,215,0,0.3); margin-top: 15px;
+    width: 240px; 
+    padding: 18px; 
+    font-size: 1.6rem; 
+    font-weight: bold;
+    background: #ffd700; 
+    color: #000; 
+    border: none; 
+    border-radius: 12px;
+    cursor: pointer; 
+    box-shadow: 0 0 25px rgba(255,215,0,0.3); 
+    margin-top: 15px;
+    /* Постоянная анимация "дыхания" */
     animation: playButtonPulse 2s ease-in-out infinite;
 }
-#play-btn:hover { animation: none; transform: scale(1.08); box-shadow: 0 0 50px rgba(255,215,0,0.8); }
+
+#play-btn:hover { transform: scale(1.05); box-shadow: 0 0 35px rgba(255,215,0,0.5); }
 #play-btn:active { transform: scale(0.95) !important; }
 #start-screen.hidden { opacity: 0; pointer-events: none; }
 
-/* ===== ОСНОВНОЙ КОНТЕЙНЕР ===== */
+/* ОСНОВНОЙ КОНТЕЙНЕР */
 #game-container {
     width: 100vw; height: 100vh; position: relative;
     background-image: url('images/backgrounds/oneurfon.png');
-    background-size: cover; background-position: center;
-    transition: background-image 0.5s ease; cursor: pointer;
+    background-size: cover; background-position: center; transition: background-image 0.5s ease; cursor: pointer;
 }
 
-/* ===== СТАТИСТИКА (десктоп) ===== */
+/* Статистика */
 #stats-panel {
     position: absolute; top: 20px; left: 50%; transform: translateX(-50%);
     background: rgba(30, 30, 30, 0.95); border: 3px solid #555; border-radius: 15px;
@@ -45,84 +51,81 @@ body, html {
 .stat-group { display: flex; flex-direction: column; gap: 5px; }
 .stat-item.mini { font-size: 1.2rem; color: #00ffcc; }
 
-/* ===== КНОПКА НАСТРОЕК (десктоп) ===== */
-#settings-btn {
-    position: absolute; top: 20px; right: 20px; z-index: 101;
-    background: rgba(30,30,30,0.9); border: 2px solid #555; border-radius: 50%;
-    width: 45px; height: 45px; font-size: 1.4rem; cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    transition: 0.2s; box-shadow: 0 4px 10px rgba(0,0,0,0.4);
-}
-#settings-btn:hover { border-color: #ffd700; transform: scale(1.1); }
-
-/* ===== РЕКЛАМНЫЙ БОНУС (десктоп) ===== */
-#ad-bonus-container { position: absolute; right: 20px; top: 80px; z-index: 110; }
-.reward-btn {
-    background: linear-gradient(135deg, #ff4500 0%, #ff6347 100%);
-    border: none; border-radius: 50px; padding: 20px 35px;
-    color: white; cursor: pointer; font-weight: bold; font-size: 1.3rem;
-    box-shadow: 0 4px 15px rgba(255, 69, 0, 0.5);
-    animation: pulse 1.5s infinite; transition: transform 0.2s;
-}
-.reward-btn:hover { transform: scale(1.05); box-shadow: 0 6px 20px rgba(255, 69, 0, 0.7); }
-
-/* ===== НАВИГАЦИЯ (десктоп — левая панель) ===== */
+/* ✅ УВЕЛИЧЕННЫЕ КНОПКИ МЕНЮ */
 #main-navigation {
     position: absolute; left: 25px; top: 50%; transform: translateY(-50%);
     display: flex; flex-direction: column; gap: 20px; z-index: 100;
 }
 .nav-btn {
-    background: rgba(30, 30, 30, 0.95); border: 3px solid #555; border-radius: 15px;
-    color: white; padding: 20px 15px; width: 140px; cursor: pointer;
-    transition: all 0.2s; box-shadow: 0 4px 10px rgba(0,0,0,0.4);
-    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    background: rgba(30, 30, 30, 0.95); 
+    border: 3px solid #555; 
+    border-radius: 15px; 
+    color: white; 
+    padding: 20px 15px;  /* Увеличил вертикальный padding */
+    width: 140px;  /* Чуть шире */
+    cursor: pointer; 
+    transition: all 0.2s; 
+    box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
 }
-.nav-btn:hover { border-color: #ffd700; transform: translateY(-2px) scale(1.03); box-shadow: 0 6px 20px rgba(255,215,0,0.3); }
-.nav-btn .icon { font-size: 2rem; display: block; }
-.nav-btn span { font-size: 0.95rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; text-shadow: 0 2px 4px rgba(0,0,0,0.5); line-height: 1.2; }
-
-/* ===== АВТОБУС (десктоп) ===== */
+.nav-btn:hover { 
+    border-color: #ffd700; 
+    transform: translateY(-2px) scale(1.03); 
+    box-shadow: 0 6px 20px rgba(255,215,0,0.3);
+}
+.nav-btn .icon {
+    font-size: 2rem;  /* Увеличил иконку */
+    display: block;
+}
+.nav-btn span {
+    font-size: 0.95rem;
+    font-weight: 700;  /* Жирный текст */
+    text-transform: uppercase;  /* Все заглавные */
+    letter-spacing: 0.5px;  /* Разреженные буквы */
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5);  /* Тень для объема */
+    line-height: 1.2;
+}
+/* Автобус */
 #bus-wrapper {
-    position: absolute; bottom: 15%; right: 5%; z-index: 10;
-    pointer-events: none; transition: transform 0.4s ease;
+    position: absolute; bottom: 15%; right: 5%; z-index: 10; pointer-events: none; transition: transform 0.4s ease;
 }
 #current-bus-img {
-    max-width: 60vw; max-height: 50vh;
-    filter: drop-shadow(0 15px 25px rgba(0,0,0,0.6));
+    max-width: 60vw; max-height: 50vh; filter: drop-shadow(0 15px 25px rgba(0,0,0,0.6));
     transition: transform 0.1s ease; transform: scale(1);
 }
 .level-3-shift { transform: translateY(140px) !important; }
 
-/* ===== ИНФОРМАЦИЯ О СТАНЦИИ (десктоп) ===== */
+/* ✅ УВЕЛИЧЕННОЕ НАЗВАНИЕ АВТОСТАНЦИИ */
 #station-footer {
-    position: absolute; bottom: 25px; left: 25px;
-    background: rgba(0,0,0,0.85); padding: 20px; border-radius: 12px;
-    border-left: 5px solid #ffd700; z-index: 10; cursor: default; min-width: 280px;
+    position: absolute; bottom: 25px; left: 25px; background: rgba(0,0,0,0.85); padding: 20px;
+    border-radius: 12px; border-left: 5px solid #ffd700; z-index: 10; cursor: default;
+    min-width: 280px; /* Фиксированная ширина */
 }
-.station-details h2 { margin: 0; color: #ffd700; font-size: 1.8rem; }
+.station-details h2 { margin: 0; color: #ffd700; font-size: 1.8rem; /* Было 1.5rem */ }
 .station-details p { margin: 5px 0 0; color: #ccc; font-size: 1.1rem; }
 #current-bus-label {
-    margin-top: 10px !important; color: #00ffcc !important;
-    font-size: 1.2rem !important; font-weight: bold;
-    text-shadow: 0 0 10px rgba(0,255,204,0.3);
+    margin-top: 10px !important; color: #00ffcc !important; font-size: 1.2rem !important;
+    font-weight: bold; text-shadow: 0 0 10px rgba(0,255,204,0.3);
 }
 
-/* ===== ОВЕРЛЕЙ И МОДАЛЬНЫЕ ОКНА ===== */
+/* Окна меню */
 #overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: none; z-index: 50; cursor: default; }
 #overlay.active { display: block; }
 .modal-window {
-    position: absolute; top: 50%; left: 50%;
-    transform: translate(-50%, -50%) scale(0.9);
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.9);
     width: 380px; background: #222; border: 3px solid #ffd700; border-radius: 20px;
     z-index: 1000; display: none; opacity: 0; transition: 0.2s; cursor: default;
 }
 .modal-window.active { display: block; opacity: 1; transform: translate(-50%, -50%) scale(1); }
-.modal-header { padding: 15px; border-bottom: 1px solid #444; display: flex; justify-content: space-between; align-items: center; }
+.modal-header { padding: 15px; border-bottom: 1px solid #444; display: flex; justify-content: space-between; }
 .modal-header h3 { margin: 0; color: #ffd700; }
 .close-btn { background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer; }
 .modal-content { padding: 15px; }
 
-/* ===== КАРТОЧКИ УЛУЧШЕНИЙ ===== */
+/* Карточки улучшений */
 .upgrade-card {
     background: #333; margin-bottom: 10px; padding: 15px; border-radius: 10px;
     display: flex; justify-content: space-between; align-items: center; gap: 15px;
@@ -134,531 +137,159 @@ body, html {
 .upg-info p { margin: 0; font-size: 0.85rem; color: #aaa; }
 .upg-cost { background: #ffd700; color: #000; padding: 8px 12px; border-radius: 8px; font-weight: bold; white-space: nowrap; }
 
-/* ===== КНОПКИ ===== */
-.buy-bus-btn {
-    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
-    color: white; border: none; padding: 16px 30px; border-radius: 12px;
-    font-weight: 800; font-size: 1.2rem; cursor: pointer; width: 100%; margin-top: 20px;
-    text-transform: uppercase; letter-spacing: 1px;
-    box-shadow: 0 4px 15px rgba(40, 167, 118, 0.4); transition: all 0.2s;
+/* Кнопка "Приступить к работе" */
+.buy-bus-btn { 
+    background: linear-gradient(135deg, #28a745 0%, #20c997 100%); 
+    color: white; 
+    border: none; 
+    padding: 16px 30px; 
+    border-radius: 12px; 
+    font-weight: 800;  /* Очень жирный */
+    font-size: 1.2rem; 
+    cursor: pointer; 
+    width: 100%; 
+    margin-top: 20px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 15px rgba(40, 167, 118, 0.4);
+    transition: all 0.2s;
 }
-.buy-bus-btn:hover { background: linear-gradient(135deg, #218838 0%, #1aa179 100%); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(40, 167, 118, 0.6); }
-.buy-bus-btn:active { transform: translateY(0) scale(0.98); }
+.buy-bus-btn:hover { 
+    background: linear-gradient(135deg, #218838 0%, #1aa179 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(40, 167, 118, 0.6);
+}
 .warning { color: #ff4444; font-size: 0.8rem; text-align: center; margin-top: 10px; }
-
-/* ===== МИНИ-ИГРЫ (карточки выбора) ===== */
-.mg-container { padding: 10px 15px 15px; }
 .mg-card { background: #333; padding: 15px; margin-bottom: 10px; border-radius: 10px; text-align: center; }
-.mg-card h4 { margin: 0 0 5px; color: #ffd700; }
-.mg-card p { margin: 0 0 8px; font-size: 0.85rem; color: #aaa; }
-.mg-card button { background: #555; color: white; border: none; padding: 10px; border-radius: 5px; width: 100%; margin-top: 10px; cursor: pointer; transition: 0.2s; font-size: 1rem; }
+.mg-card button { background: #555; color: white; border: none; padding: 10px; border-radius: 5px; width: 100%; margin-top: 10px; cursor: pointer; transition: 0.2s;}
 .mg-card button:hover { background: #ffd700; color: #000; }
 
-/* ===== МАГАЗИН ===== */
-#shop-window .modal-content { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 20px; }
-#shop-window p { color: #aaa; margin: 5px 0 10px; font-size: 1rem; }
-#next-bus-preview { width: 100%; display: flex; flex-direction: column; align-items: center; }
-#next-bus-name { color: #ffd700; font-size: 1.4rem; font-weight: bold; margin: 10px 0; text-shadow: 0 0 10px rgba(255,215,0,0.3); }
-#bus-available, #bus-complete { width: 100%; display: flex; flex-direction: column; align-items: center; }
-
-/* ===== НАСТРОЙКИ ===== */
-.setting-row { display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px; }
-.setting-row label { color: #ccc; font-size: 0.95rem; }
-.setting-row input[type="range"] { width: 100%; accent-color: #ffd700; cursor: pointer; height: 6px; }
-#orientation-btn, #reset-btn {
-    padding: 12px; background: #333; color: white; border: 2px solid #444;
-    border-radius: 10px; cursor: pointer; font-size: 1rem; transition: 0.2s; width: 100%;
+#ad-bonus-container { position: absolute; right: 20px; top: 80px; z-index: 110; }
+.reward-btn {
+    background: linear-gradient(135deg, #ff4500 0%, #ff6347 100%);
+    border: none;
+    border-radius: 50px;
+    padding: 20px 35px;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1.3rem;
+    box-shadow: 0 4px 15px rgba(255, 69, 0, 0.5);
+    animation: pulse 1.5s infinite;
+    transition: transform 0.2s;
 }
-#orientation-btn:hover { border-color: #00ffcc; background: #3a3a3a; }
-#reset-btn:hover { background: #cc0000; border-color: #ff6666; }
+.reward-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 20px rgba(255, 69, 0, 0.7);
+}
+@keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
 
-/* ===== ФЛОАТ-КЛИК ===== */
 .floating-click-value {
     position: absolute; pointer-events: none; font-size: 1.5rem; font-weight: bold; color: #ffd700;
     text-shadow: 0 0 10px rgba(255, 215, 0, 0.8), 2px 2px 2px #000; z-index: 1000; opacity: 0;
     animation: floatUpAndFade 0.8s ease-out forwards;
 }
-
-/* ===== АНИМАЦИИ ===== */
-@keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
 @keyframes floatUpAndFade {
     0% { transform: translate(-50%, -50%) translateY(0); opacity: 0; }
     10% { opacity: 1; }
     100% { transform: translate(-50%, -50%) translateY(-60px); opacity: 0; }
 }
+
 @keyframes playButtonPulse {
-    0%, 100% { transform: scale(1); box-shadow: 0 0 25px rgba(255,215,0,0.3); }
-    50% { transform: scale(1.05); box-shadow: 0 0 40px rgba(255,215,0,0.6); }
+    0%, 100% { 
+        transform: scale(1); 
+        box-shadow: 0 0 25px rgba(255,215,0,0.3);
+    }
+    50% { 
+        transform: scale(1.05); 
+        box-shadow: 0 0 40px rgba(255,215,0,0.6);
+    }
+}
+.buy-bus-btn:active {
+    transform: translateY(0) scale(0.98);
+}
+#play-btn:hover { 
+    animation: none;
+    transform: scale(1.08); 
+    box-shadow: 0 0 50px rgba(255,215,0,0.8); 
 }
 
-/* ================================================================
-   📱 МОБИЛЬНАЯ ОПТИМИЗАЦИЯ (до 520px ширины)
-
-   Итоговые зоны на экране:
-   ┌───────────────────────────────────┐
-   │ [Баланс: XXX  В сек: X  Клик: X] [⚙️]  <- ~55px
-   │                                [🎁]     <- бонус (правый угол)
-   │                                          <- свободная зона
-   │                🚌 автобус                <- top: ~120px
-   │                                          <- свободная зона
-   │ [Станция]                                <- bottom: 73px
-   ├───────────────────────────────────┤
-   │      [🛠️]      [🚌]      [🧩]         <- нижний таббар 65px
-   └───────────────────────────────────┘
-   ================================================================ */
-@media (max-width: 520px) {
-
-    /* ── СТАРТОВЫЙ ЭКРАН ── */
-    #start-screen h1 { font-size: 2.2rem; }
-    #play-btn { width: 200px; font-size: 1.3rem; padding: 14px; }
-
-    /* ── СТАТИСТИКА: от левого края до правого, оставляем 50px для ⚙️ ── */
-    #stats-panel {
-        top: 8px;
-        left: 8px;
-        right: 58px;       /* ← оставляем место для кнопки настроек */
-        transform: none;
-        width: auto;
-        padding: 7px 10px;
-        gap: 8px;
-        border-radius: 12px;
-        border-width: 2px;
-        flex-wrap: nowrap;
-        align-items: center;
-        justify-content: space-between;
-    }
-    .stat-item { font-size: 1.2rem; white-space: nowrap; line-height: 1.1; }
-    .stat-divider { width: 1px; height: 28px; flex-shrink: 0; }
-    .stat-group { gap: 1px; }
-    .stat-item.mini { font-size: 0.78rem; color: #00ffcc; }
-
-    /* ── КНОПКА НАСТРОЕК: отдельно в верхнем правом углу, НЕ перекрывает стату ── */
-    #settings-btn {
-        top: 8px;
-        right: 8px;
-        width: 42px;
-        height: 42px;
-        font-size: 1.2rem;
-        z-index: 102;       /* выше, чтобы кликалась */
-    }
-
-    /* ── БОНУС РЕКЛАМА: правый угол, ниже ⚙️, компактный ── */
-    #ad-bonus-container {
-        top: 58px;          /* ниже stats-panel + зазор */
-        right: 8px;
-        left: auto;
-        transform: none;
-    }
-    .reward-btn {
-        padding: 7px 12px;
-        font-size: 0.75rem;
-        border-radius: 18px;
-        white-space: nowrap;
-    }
-
-    /* ── НАВИГАЦИЯ: нижний таббар ── */
-    #main-navigation {
-        position: absolute;
-        left: 0; right: 0;
-        bottom: 0; top: auto;
-        transform: none;
-        flex-direction: row;
-        justify-content: stretch;
-        gap: 0;
-        background: rgba(12, 12, 12, 0.97);
-        border-top: 2px solid #3a3a3a;
-        padding: 5px 4px;
-        padding-bottom: max(5px, env(safe-area-inset-bottom));
-        z-index: 200;
-        height: 65px;
-    }
-    .nav-btn {
-        flex: 1;
-        width: auto;
-        min-width: 0;
-        padding: 4px 2px;
-        border-radius: 10px;
-        border: 2px solid transparent;
-        box-shadow: none;
-        gap: 3px;
-        background: transparent;
-    }
-    .nav-btn:hover, .nav-btn:active {
-        border-color: #ffd700;
-        background: rgba(255,215,0,0.1);
-        transform: none;
-        box-shadow: none;
-    }
-    .nav-btn .icon { font-size: 1.55rem; }
-    .nav-btn span { font-size: 0.58rem; letter-spacing: 0; }
-
-    /* ── АВТОБУС: середина экрана, не залезает ни на стату, ни на таббар ── */
-    #bus-wrapper {
-        position: absolute;
-        top: 110px;        /* ниже stats-panel */
-        bottom: auto;
-        right: 0;
-        left: 0;
-        display: flex;
-        justify-content: flex-end;
-        align-items: flex-start;
-        padding-right: 6px;
-        pointer-events: none;
-    }
-    #current-bus-img {
-        max-width: 70vw;
-        max-height: 40vh;
-    }
-    /* Убираем translateY-смещение для уровня 3 (позиционируем через top) */
-    .level-3-shift { transform: none !important; }
-
-    /* ── ИНФОРМАЦИЯ О СТАНЦИИ: прямо над таббаром ── */
-    #station-footer {
-        position: absolute;
-        bottom: 72px;       /* 65px (таббар) + 7px зазор */
-        left: 8px;
-        right: auto;
-        padding: 8px 12px;
-        min-width: 0;
-        max-width: 58vw;    /* не налезает на автобус */
-        border-left-width: 4px;
-        border-radius: 10px;
-        background: rgba(0,0,0,0.9);
-    }
-    .station-details h2 {
-        font-size: 0.92rem;
-        margin: 0;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-    .station-details p { font-size: 0.75rem; margin: 2px 0 0; }
-    #current-bus-label {
-        font-size: 0.78rem !important;
-        margin-top: 2px !important;
-    }
-
-    /* ── МОДАЛЬНЫЕ ОКНА ── */
-    .modal-window {
-        width: 96vw;
-        max-height: 82vh;
-        overflow-y: auto;
-        border-radius: 14px;
-        border-width: 2px;
-        top: 48%;
-    }
-    .modal-content { padding: 10px 12px; }
-    .modal-header { padding: 10px 12px; }
-    .modal-header h3 { font-size: 1rem; }
-
-    /* ── УЛУЧШЕНИЯ ── */
-    .upgrade-card { padding: 10px 12px; margin-bottom: 7px; }
-    .upg-info h4 { font-size: 0.9rem; }
-    .upg-info p { font-size: 0.78rem; }
-    .upg-cost { padding: 6px 9px; font-size: 0.82rem; }
-    .warning { font-size: 0.75rem; }
-
-    /* ── МАГАЗИН ── */
-    #next-bus-name { font-size: 1.1rem; }
-    .buy-bus-btn { font-size: 0.95rem; padding: 12px; margin-top: 10px; }
-
-    /* ── МИНИ-ИГРЫ (карточки) ── */
-    .mg-container { padding: 8px 10px 10px; }
-    .mg-card { padding: 10px 12px; margin-bottom: 8px; }
-    .mg-card h4 { font-size: 0.95rem; }
-    .mg-card p { font-size: 0.78rem; }
-    .mg-card button { font-size: 0.9rem; padding: 9px; }
+#play-btn:active { 
+    transform: scale(0.95) !important; 
 }
 
-/* ================================================================
-   🎮 МИНИ-ИГРА: ДИСПЕТЧЕР
-   Контейнер создаётся в game.js через startTechInspectionGame()
-   Оптимизирован под мобильный экран — суть игры не меняется
-   ================================================================ */
-
-#tech-inspection-game {
-    position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: #1a1a1a;
-    z-index: 500;
-    display: none;
-    flex-direction: column;
-    overflow: hidden;
-}
-#tech-inspection-game.active { display: flex; }
-
-/* Основная рабочая область (справа оставляем место для кнопки справочника) */
-.dispatch-game-area {
-    flex: 1;
+/* ✅ КРАСИВОЕ МЕНЮ МАГАЗИНА */
+#shop-window .modal-content {
     display: flex;
     flex-direction: column;
-    padding: 12px 48px 12px 12px;
-    gap: 10px;
-    overflow: hidden;
-    min-height: 0;
-}
-
-/* Шапка: таймер, счёт, промахи */
-.dispatch-header {
-    display: flex;
     align-items: center;
-    gap: 8px;
-    background: rgba(30,30,30,0.95);
-    border: 2px solid #444;
-    border-radius: 10px;
-    padding: 8px 12px;
-    flex-shrink: 0;
-}
-.dh-item { flex: 1; text-align: center; }
-.dh-label { font-size: 0.7rem; color: #aaa; margin-bottom: 2px; }
-.dh-val { font-size: 1.1rem; color: #ffd700; font-weight: bold; }
-
-/* Тело игры — центрировано по вертикали */
-.dispatch-body {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: 10px;
-    min-height: 0;
-}
-.dispatch-task { text-align: center; }
-.dispatch-task p { color: #aaa; font-size: 0.9rem; margin: 0 0 6px; }
-
-/* Кнопка-рычаг для открытия справочника */
-.dispatch-hint-toggle {
-    position: absolute;
-    right: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    background: #ffd700;
-    color: #000;
-    border: none;
-    border-radius: 10px 0 0 10px;
-    width: 38px;
-    height: 68px;
-    font-size: 1.25rem;
-    cursor: pointer;
-    z-index: 60;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: -3px 0 10px rgba(0,0,0,0.5);
-    transition: background 0.2s;
-    touch-action: manipulation;
-}
-.dispatch-hint-toggle:hover { background: #ffe44d; }
-
-/* Справочник — скользит справа */
-.dispatch-hint {
-    position: absolute;
-    right: -270px;
-    top: 0;
-    width: 265px;
-    height: 100%;
-    background: rgba(16, 16, 16, 0.98);
-    border-left: 3px solid #ffd700;
-    padding: 14px 12px 14px 14px;
-    overflow-y: auto;
-    transition: right 0.3s ease;
-    z-index: 70;
-    font-size: 0.82rem;
-    line-height: 1.5;
-}
-.dispatch-hint.open { right: 0; }
-.dispatch-hint h4 { color: #ffd700; margin: 0 0 10px; font-size: 0.95rem; }
-
-.hint-row {
-    display: flex;
-    justify-content: space-between;
-    padding: 5px 0;
-    border-bottom: 1px solid #2a2a2a;
-    gap: 8px;
-}
-.hint-code { color: #00ffcc; font-weight: bold; flex-shrink: 0; }
-.hint-val  { color: #ddd; text-align: right; }
-
-@media (max-width: 520px) {
-    .dispatch-game-area { padding: 10px 44px 10px 10px; gap: 8px; }
-    .dispatch-hint { width: 80vw; max-width: 300px; font-size: 0.8rem; }
-    .dispatch-hint-toggle { width: 34px; height: 58px; font-size: 1.1rem; }
-    .dh-val { font-size: 1rem; }
-    .dh-label { font-size: 0.62rem; }
-    .dispatch-task p { font-size: 0.85rem; }
-}
-
-/* ================================================================
-   🚌 МИНИ-ИГРА: МАРШРУТ
-   Контейнер создаётся в game.js через startRouteGame()
-   Суть игры та же — оптимизирован под мобиль:
-   • трасса занимает всё свободное пространство
-   • остановки широкие (44px)
-   • кнопка СТОП крупная и удобная для пальца
-   ================================================================ */
-
-#route-game {
-    position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: #1a1a2e;
-    z-index: 500;
-    display: none;
-    flex-direction: column;
-    align-items: stretch;
-    padding: 10px;
-    gap: 8px;
-    overflow: hidden;
-}
-#route-game.active { display: flex; }
-
-/* Шапка */
-.route-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background: rgba(30,30,30,0.95);
-    border: 2px solid #444;
-    border-radius: 10px;
-    padding: 8px 12px;
-    flex-shrink: 0;
-}
-.rh-item { text-align: center; flex: 1; }
-.rh-label { font-size: 0.68rem; color: #aaa; }
-.rh-val   { font-size: 1rem; color: #ffd700; font-weight: bold; line-height: 1.2; }
-
-/* Трасса занимает всё оставшееся место */
-.route-track-wrapper {
-    flex: 1;
-    min-height: 0;
-    display: flex;
-}
-.route-track {
-    flex: 1;
-    width: 100%;
-    background: #16213e;
-    border: 2px solid #333;
-    border-radius: 12px;
-    position: relative;
-    overflow: hidden;
-}
-
-/* Широкая дорога по центру */
-.route-road {
-    position: absolute;
-    left: 50%; transform: translateX(-50%);
-    top: 0; bottom: 0;
-    width: 60%;
-    background: #2d3561;
-    border-left: 3px solid #3a4080;
-    border-right: 3px solid #3a4080;
-}
-
-/* Движущаяся разметка */
-.route-road-line {
-    position: absolute;
-    left: 50%; transform: translateX(-50%);
-    width: 5px; top: 0; bottom: 0;
-    background: repeating-linear-gradient(
-        to bottom, #ffd700 0px, #ffd700 22px, transparent 22px, transparent 44px
-    );
-    animation: roadScroll 0.5s linear infinite;
-    z-index: 2;
-}
-@keyframes roadScroll {
-    from { background-position: 0 0; }
-    to   { background-position: 0 44px; }
-}
-
-/* Автобус */
-.route-bus {
-    position: absolute;
-    left: 50%; transform: translateX(-50%);
-    font-size: 2.8rem;
-    z-index: 10;
-    filter: drop-shadow(0 3px 6px rgba(0,0,0,0.7));
-    transition: top 0.05s linear;
-    line-height: 1;
-}
-
-/* Остановки — широкие, хорошо попасть пальцем */
-.route-stop {
-    position: absolute;
-    left: 0; right: 0;
-    height: 44px;
-    background: rgba(255, 215, 0, 0.14);
-    border-top: 3px solid #ffd700;
-    border-bottom: 3px solid #ffd700;
-    display: flex;
-    align-items: center;
-    padding-left: 14px;
-    font-size: 0.85rem;
-    color: #ffd700;
-    font-weight: bold;
-    z-index: 5;
-    pointer-events: none;
-    white-space: nowrap;
-    overflow: hidden;
-}
-.route-stop::before { content: '🚏'; margin-right: 6px; font-size: 1.2rem; flex-shrink: 0; }
-.route-stop.missed {
-    background: rgba(255,68,68,0.14);
-    border-color: #ff4444;
-    color: #ff4444;
-}
-
-/* Всплывающий результат попадания/промаха */
-.route-result-popup {
-    position: absolute;
-    top: 50%; left: 50%;
-    transform: translate(-50%, -50%);
-    background: rgba(0,0,0,0.88);
-    border: 3px solid #ffd700;
-    border-radius: 14px;
-    padding: 14px 22px;
     text-align: center;
-    z-index: 20;
-    animation: popIn 0.2s ease;
-    pointer-events: none;
-    min-width: 150px;
-}
-.route-result-popup .rp-emoji { font-size: 2.2rem; line-height: 1; }
-.route-result-popup .rp-text  { font-size: 0.9rem; color: #fff; margin-top: 4px; }
-.route-result-popup .rp-bonus { font-size: 1.1rem; color: #ffd700; font-weight: bold; margin-top: 2px; }
-@keyframes popIn {
-    from { transform: translate(-50%,-50%) scale(0.7); opacity: 0; }
-    to   { transform: translate(-50%,-50%) scale(1);   opacity: 1; }
+    padding: 20px;
 }
 
-/* Кнопка СТОП — крупная, удобная для мобила */
-.route-stop-btn {
+#shop-window p {
+    color: #aaa;
+    margin: 5px 0 10px;
+    font-size: 1rem;
+}
+
+#next-bus-preview {
     width: 100%;
-    padding: 18px;
-    font-size: 1.3rem;
-    font-weight: 900;
-    background: linear-gradient(135deg, #c0392b 0%, #e74c3c 100%);
-    color: white;
-    border: none;
-    border-radius: 14px;
-    cursor: pointer;
-    letter-spacing: 1px;
-    box-shadow: 0 5px 18px rgba(192,57,43,0.5);
-    transition: all 0.08s;
-    text-transform: uppercase;
-    flex-shrink: 0;
-    -webkit-tap-highlight-color: transparent;
-    touch-action: manipulation;
-}
-.route-stop-btn:active {
-    transform: scale(0.96);
-    box-shadow: 0 2px 8px rgba(192,57,43,0.4);
-    background: linear-gradient(135deg, #a93226 0%, #cb4335 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
-@media (max-width: 520px) {
-    #route-game { padding: 8px; gap: 6px; }
-    .route-header { padding: 6px 10px; }
-    .rh-val { font-size: 0.92rem; }
-    .rh-label { font-size: 0.6rem; }
-    .route-bus { font-size: 2.4rem; }
-    .route-stop { height: 48px; font-size: 0.8rem; }
-    .route-stop-btn { padding: 20px; font-size: 1.45rem; border-radius: 16px; }
+#next-bus-name {
+    color: #ffd700;
+    font-size: 1.4rem;
+    font-weight: bold;
+    margin: 10px 0;
+    text-shadow: 0 0 10px rgba(255,215,0,0.3);
 }
+
+#bus-available, #bus-complete {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.buy-bus-btn {
+    width: 90%;
+    margin-top: 15px;
+    font-size: 1.1rem;
+    padding: 16px;
+}
+
+/* Подсветка кнопки покупки при наведении */
+.buy-bus-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(40,167,118,0.6);
+}
+
+/* ⚙️ КНОПКА НАСТРОЕК */
+#settings-btn {
+    position: absolute; top: 20px; right: 20px; z-index: 101;
+    background: rgba(30,30,30,0.9); border: 2px solid #555; border-radius: 50%;
+    width: 45px; height: 45px; font-size: 1.4rem; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: 0.2s; box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+}
+#settings-btn:hover { border-color: #ffd700; transform: scale(1.1); }
+
+/* 🎛️ СТИЛИ НАСТРОЕК */
+.setting-row {
+    display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px;
+}
+.setting-row label { color: #ccc; font-size: 0.95rem; }
+.setting-row input[type="range"] {
+    width: 100%; accent-color: #ffd700; cursor: pointer; height: 6px;
+}
+#orientation-btn, #reset-btn {
+    padding: 12px; background: #333; color: white; border: 2px solid #444;
+    border-radius: 10px; cursor: pointer; font-size: 1rem; transition: 0.2s;
+}
+#orientation-btn:hover { border-color: #00ffcc; background: #3a3a3a; }
+#reset-btn:hover { background: #cc0000; border-color: #ff6666; }
+
