@@ -916,89 +916,64 @@ function endDispatcherGame(score, misses, speedBonus, baseReward) {
 // 🚌 МИНИ-ИГРА: МАРШРУТ (x4 МЕНЬШЕ НАГРАДА)
 // ==========================================
 function startRouteGame() {
-    const t = i18n[currentLang];
+	const t = i18n[currentLang];
     closeAllMenus();
     document.getElementById('overlay').classList.add('active');
-    
+    // ✅ УМЕНЬШЕНО В 4 РАЗА: было *90, стало *22
     const baseReward = getSecPower() * 22;
     const passengersPerStop = Math.max(1, Math.floor(getSecPower() / 8));
-    
+
     const gameArea = document.createElement('div');
     gameArea.id = 'minigame-area';
-    gameArea.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);z-index:2000;overflow:hidden;display:flex;flex-direction:column;';
-    
     gameArea.innerHTML = `
-        <button onclick="forceCloseMinigame()" style="position:absolute;top:5px;right:10px;background:none;border:none;color:white;font-size:2rem;cursor:pointer;z-index:9999;width:44px;height:44px;display:flex;align-items:center;justify-content:center;">×</button>
-        
-        <!-- Информация сверху (не перекрывает дорогу) -->
-        <div id="route-info" style="flex-shrink:0;padding:10px;text-align:center;background:rgba(0,0,0,0.8);border-bottom:2px solid #ffd700;">
-            <h2 style="color:#ffd700;font-size:1.3rem;margin:0 0 5px;">${t.mgRouteName} №42</h2>
-            <p style="color:#aaa;margin:0;font-size:0.8rem;">${t.routeTask}</p>
-            <div style="display:flex;gap:15px;justify-content:center;margin-top:5px;flex-wrap:wrap;">
-                <p style="color:#00ffcc;font-size:0.9rem;margin:0;">👥 <span id="passengers">0</span></p>
-                <p style="color:#ff4444;font-size:0.9rem;margin:0;">❌ <span id="missed">0</span>/2</p>
+        <button onclick="forceCloseMinigame()" style="position:absolute;top:15px;right:20px;background:none;border:none;color:white;font-size:2.5rem;cursor:pointer;z-index:9999;">×</button>
+		<div style="position:absolute;top:20px;left:50%;transform:translateX(-50%);text-align:center;background:rgba(0,0,0,0.82);padding:15px 30px;border-radius:15px;border:2px solid #ffd700;max-width:90%;">
+            <h2 style="color:#ffd700;font-size:1.8rem;margin:0 0 8px;">${t.mgRouteName}№42</h2>
+            <p style="color:#aaa;margin:0;font-size:0.95rem;">${t.routeTask}</p>
+            <div style="display:flex;gap:30px;justify-content:center;margin-top:10px;">
+                <p style="color:#00ffcc;font-size:1.1rem;margin:0;">👥 ${t.routePassengers} <span id="passengers" style="color:#ffd700;font-weight:bold;">0</span></p>
+                <p style="color:#ff4444;font-size:1.1rem;margin:0;">❌ ${t.routeMisses}: <span id="missed" style="color:#ffd700;font-weight:bold;">0</span>/2</p>
             </div>
-            <p style="color:#4caf50;font-size:0.8rem;margin:5px 0 0;">💰 +${formatMoney(passengersPerStop*10)} ₽</p>
+            <div style="display:flex;gap:20px;justify-content:center;margin-top:8px;">
+                <p style="color:#4caf50;font-size:0.9rem;margin:0;">💰 ${t.routeReward}: +${formatMoney(passengersPerStop*10)} ₽</p>
+                <p style="color:#ff9800;font-size:0.9rem;margin:0;">⚡ ${t.routeSpeed}: <span id="speed-display" style="font-weight:bold;">1.0</span>x</p>
+            </div>
+            <p style="color:#aaa;font-size:0.8rem;margin:6px 0 0;">🏆 ${t.dispTotalCombo}: <span style="color:#ffd700;font-weight:bold;">${miniGameStats.route.bestStreak}</span></p>
         </div>
-        
-        <!-- Дорога (занимает всё свободное место) -->
-        <div id="route-road" style="flex:1;position:relative;margin:10px;background:linear-gradient(to bottom,#444,#222);border-radius:10px;overflow:hidden;border:2px solid #666;">
-            <div style="position:absolute;bottom:50%;left:0;width:100%;height:3px;background:repeating-linear-gradient(90deg,#fff 0,#fff 25px,transparent 25px,transparent 50px);"></div>
-            <div id="route-bus" style="position:absolute;left:0;top:50%;transform:translateY(-50%);font-size:3rem;transition:left 0.05s linear;filter:drop-shadow(0 3px 8px rgba(0,0,0,0.5));">🚌</div>
-            <div id="route-stop" style="position:absolute;right:15%;top:0;width:60px;height:100%;background:linear-gradient(to right,rgba(255,215,0,0.25),rgba(255,215,0,0.05));border-left:3px solid #ffd700;display:flex;align-items:center;justify-content:center;font-size:2.5rem;">🚏</div>
+        <div style="position:absolute;bottom:200px;left:50%;transform:translateX(-50%);width:85%;height:120px;background:linear-gradient(to bottom,#555,#333);border-radius:15px;overflow:hidden;border:4px solid #666;box-shadow:0 10px 30px rgba(0,0,0,0.5);">
+            <div style="position:absolute;bottom:10px;left:0;width:100%;height:3px;background:repeating-linear-gradient(90deg,#fff 0,#fff 30px,transparent 30px,transparent 60px);"></div>
+            <div id="route-bus" style="position:absolute;left:0;bottom:20px;font-size:5rem;transition:left 0.05s linear;filter:drop-shadow(0 5px 10px rgba(0,0,0,0.5));">🚌</div>
+            <div style="position:absolute;right:120px;bottom:0;width:100px;height:100%;background:linear-gradient(to bottom,rgba(255,215,0,0.2),rgba(255,215,0,0.05));border-left:4px solid #ffd700;display:flex;align-items:center;justify-content:center;font-size:3rem;">🚏</div>
         </div>
-        
-        <!-- Кнопка СТОП -->
-        <div style="flex-shrink:0;padding:10px;text-align:center;">
-            <button id="stop-btn" style="padding:15px 50px;font-size:1.3rem;background:linear-gradient(135deg,#ff9800,#f57c00);color:white;border:none;border-radius:12px;cursor:pointer;font-weight:bold;box-shadow:0 5px 20px rgba(255,152,0,0.5);">СТОП 🛑</button>
-            <p style="color:#888;font-size:0.75rem;margin:5px 0 0;">${t.routeOrSpace}</p>
-        </div>
+        <button id="stop-btn" style="position:absolute;bottom:50px;left:50%;transform:translateX(-50%);padding:25px 80px;font-size:1.8rem;background:linear-gradient(135deg,#ff9800,#f57c00);color:white;border:none;border-radius:15px;cursor:pointer;font-weight:bold;box-shadow:0 8px 25px rgba(255,152,0,0.5);transition:0.1s;">${t.routeStopBtn} 🛑</button>
+        <p style="position:absolute;bottom:20px;left:50%;transform:translateX(-50%);color:#888;font-size:0.9rem;white-space:nowrap;">${t.routeOrSpace}</p>
     `;
-    
+    gameArea.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);z-index:2000;';
     document.body.appendChild(gameArea);
-    
-    let busPos = 0;
-    let passengers = 0;
-    let missed = 0;
-    let gameActive = true;
-    let canStop = false;
-    const stopPosition = 85; // Позиция остановки в % (справа)
-    const stopZone = 12;
-    
-    // Определяем направление движения
-    let direction = 1; // 1 = вправо, -1 = влево
-    
+    let busPos = 0, passengers = 0, missed = 0, gameActive = true, canStop = false;
+    let currentSpeed = 1.2, speedMultiplier = 1.0;
+    let currentStreak = 0, maxStreakInGame = 0;
+    const stopPosition = 75, baseStopZone = 12;
+
     const moveInterval = setInterval(() => {
         if (!gameActive) return;
-        
-        busPos += direction * 1.5;
-        
+        busPos += currentSpeed * speedMultiplier;
         const busEl = document.getElementById('route-bus');
-        if (busEl) {
-            busEl.style.left = busPos + '%';
-            // Разворачиваем автобус в сторону движения
-            busEl.style.transform = `translateY(-50%) scaleX(${direction})`;
-        }
+        if (busEl) busEl.style.left = busPos + '%';
         
-        const currentZone = stopZone;
-        canStop = Math.abs(busPos - stopPosition) < currentZone;
+        const currentZone = baseStopZone / speedMultiplier;
+        canStop = Math.abs(busPos - stopPosition) < currentZone && busPos < stopPosition + 5;
         
         const btn = document.getElementById('stop-btn');
         if (btn) {
-            if (canStop) {
-                btn.style.background = 'linear-gradient(135deg,#4caf50,#388e3c)';
-                btn.style.boxShadow = '0 5px 20px rgba(76,175,80,0.6)';
-            } else {
-                btn.style.background = 'linear-gradient(135deg,#ff9800,#f57c00)';
-                btn.style.boxShadow = '0 5px 20px rgba(255,152,0,0.5)';
-            }
+            if (canStop) { btn.style.background='linear-gradient(135deg,#4caf50,#388e3c)'; btn.style.boxShadow='0 8px 25px rgba(76,175,80,0.6)'; }
+            else { btn.style.background='linear-gradient(135deg,#ff9800,#f57c00)'; btn.style.boxShadow='0 8px 25px rgba(255,152,0,0.5)'; }
         }
         
-        // Если автобус уехал за пределы — разворачиваем
-        if (busPos > 100) {
-            direction = -1;
-        } else if (busPos < 0) {
-            direction = 1;
+        if (busPos > 100) { 
+            // Игрок пропустил остановку!
+            if (currentStreak > miniGameStats.route.bestStreak) miniGameStats.route.bestStreak = currentStreak;
+            currentStreak = 0;
             missed++;
             const missedEl = document.getElementById('missed');
             if (missedEl) missedEl.innerText = missed;
@@ -1006,57 +981,62 @@ function startRouteGame() {
             if (missed >= 2) {
                 gameActive = false;
                 clearInterval(moveInterval);
-                setTimeout(() => endRouteGame(passengers, baseReward, 0), 500);
+                setTimeout(() => endRouteGame(passengers, baseReward, maxStreakInGame), 500);
+            } else {
+                busPos = 0; 
+                canStop = false;
+                // Немного сбрасываем скорость после ошибки, чтобы дать шанс
+                speedMultiplier = Math.max(1.0, speedMultiplier - 0.5); 
+                const speedEl = document.getElementById('speed-display');
+                if (speedEl) speedEl.innerText = speedMultiplier.toFixed(1);
             }
         }
     }, 50);
-    
-   function attemptStop() {
+
+    function attemptStop() {
         if (!gameActive) return;
-        
-        if (canStop) {
+        const currentZone = baseStopZone / speedMultiplier;
+        if (Math.abs(busPos - stopPosition) < currentZone && busPos < stopPosition + 5) {
             passengers += passengersPerStop;
             const reward = passengersPerStop * 10;
-            balance += reward;
+            const speedBonus = Math.floor(reward * (speedMultiplier - 1) * 0.3);
+            const totalReward = reward + speedBonus;
+            balance += totalReward;
             
-            const passEl = document.getElementById('passengers');
-            if (passEl) passEl.innerText = passengers;
+            currentStreak++;
+            if (currentStreak > maxStreakInGame) maxStreakInGame = currentStreak;
             
-            createFloatingText(window.innerWidth/2, window.innerHeight/2, reward);
+            document.getElementById('passengers').innerText = passengers;
+            createFloatingText(window.innerWidth/2, window.innerHeight/2-100, totalReward);
             playPurchaseSound();
             
-            // Визуальный фидбек
             const busEl = document.getElementById('route-bus');
-            if (busEl) {
-                busEl.style.transform = `translateY(-50%) scaleX(${direction}) scale(1.2)`;
-                setTimeout(() => {
-                    if (busEl) busEl.style.transform = `translateY(-50%) scaleX(${direction})`;
-                }, 200);
-            }
-        } else {
-            missed++;
-            const missedEl = document.getElementById('missed');
-            if (missedEl) missedEl.innerText = missed;
+            if (busEl) { busEl.style.transform='scale(1.1)'; setTimeout(() => busEl.style.transform='scale(1)',200); }
             
+            busPos = 0; 
+            canStop = false;
+            speedMultiplier += 0.15;
+            if (speedMultiplier > 20) speedMultiplier = 20;
+            document.getElementById('speed-display').innerText = speedMultiplier.toFixed(1);
+        } else {
+            if (currentStreak > miniGameStats.route.bestStreak) miniGameStats.route.bestStreak = currentStreak;
+            currentStreak = 0;
+            missed++;
+            document.getElementById('missed').innerText = missed;
             if (missed >= 2) {
                 gameActive = false;
                 clearInterval(moveInterval);
-                setTimeout(() => endRouteGame(passengers, baseReward, 0), 500);
+                setTimeout(() => endRouteGame(passengers, baseReward, maxStreakInGame), 500);
             }
         }
     }
-    
+
     document.getElementById('stop-btn')?.addEventListener('click', attemptStop);
-    
-    const spaceHandler = (e) => {
-        if (e.code === 'Space' && gameActive) {
-            e.preventDefault();
-            attemptStop();
-        }
-    };
+    const spaceHandler = e => { if (e.code==='Space' && gameActive) { e.preventDefault(); attemptStop(); } };
     document.addEventListener('keydown', spaceHandler);
     gameArea._spaceHandler = spaceHandler;
 }
+
 function endRouteGame(passengers, baseReward, maxStreak) {
     const total = passengers * 10;
     const bonus = passengers >= 10 ? Math.floor(baseReward * 0.5) : 0;
