@@ -394,3 +394,76 @@ body, html { margin: 0; padding: 0; width: 100%; height: 100%; font-family: 'Seg
         font-size: 1.2rem;
     }
 }
+/* 1. ИСПРАВЛЕНИЕ ЗАТЕМНЕНИЯ: Опускаем интерфейс под оверлей */
+#stats-panel, #main-navigation, #station-footer, #settings-btn, #ad-bonus-container {
+    z-index: 5 !important;
+}
+#overlay {
+    z-index: 100 !important;
+}
+.modal-window, #minigame-area {
+    z-index: 200 !important;
+}
+
+/* 2. ГЛОБАЛЬНАЯ УСУШКА ДЛЯ ГОРИЗОНТАЛКИ */
+@media screen and (orientation: landscape) and (max-height: 550px) {
+    
+    /* Баланс: делаем мелким и компактным */
+    #stats-panel {
+        top: 2px;
+        padding: 4px 12px;
+        gap: 8px;
+        transform: translateX(-50%) scale(0.65);
+        transform-origin: top center;
+        background: rgba(20, 20, 20, 0.8);
+    }
+    .stat-item { font-size: 1.1rem; }
+    .stat-item img { width: 16px; height: 16px; }
+
+    /* Кнопки меню слева: уменьшаем в 2 раза и чуть сдвигаем */
+    #main-navigation {
+        left: 10px;
+        top: 40%; /* Сдвинули чуть выше центра */
+        transform: translateY(-50%) scale(0.5);
+        transform-origin: left center;
+        gap: 6px;
+    }
+    .nav-btn { width: 100px; padding: 12px 5px; }
+
+    /* Инфо об уровне и автобусе (Слободость): в левый нижний угол, мелко */
+    #station-footer {
+        bottom: 5px;
+        left: 5px;
+        padding: 6px 10px;
+        transform: scale(0.55);
+        transform-origin: bottom left;
+        max-width: 250px;
+    }
+
+    /* Мини-игра МАРШРУТ: Адаптация под узкий экран */
+    .route-game {
+        padding: 10px;
+        justify-content: center;
+    }
+    .route-container {
+        width: 85vw;
+        height: 100px; /* Сильно уменьшили высоту дороги */
+        margin: 10px 0;
+    }
+    .bus-mini {
+        width: 45px;
+        height: 22px;
+        bottom: 5px;
+    }
+    .stop-line {
+        width: 12px;
+    }
+    .mg-instr {
+        font-size: 0.8rem;
+        margin-bottom: 5px;
+    }
+    .route-btn {
+        padding: 10px 30px;
+        font-size: 1rem;
+    }
+}
