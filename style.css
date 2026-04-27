@@ -45,6 +45,27 @@ body, html {
 .stat-group { display: flex; flex-direction: column; gap: 5px; }
 .stat-item.mini { font-size: 1.2rem; color: #00ffcc; }
 
+/* ===== КНОПКА НАСТРОЕК (десктоп) ===== */
+#settings-btn {
+    position: absolute; top: 20px; right: 20px; z-index: 101;
+    background: rgba(30,30,30,0.9); border: 2px solid #555; border-radius: 50%;
+    width: 45px; height: 45px; font-size: 1.4rem; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: 0.2s; box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+}
+#settings-btn:hover { border-color: #ffd700; transform: scale(1.1); }
+
+/* ===== РЕКЛАМНЫЙ БОНУС (десктоп) ===== */
+#ad-bonus-container { position: absolute; right: 20px; top: 80px; z-index: 110; }
+.reward-btn {
+    background: linear-gradient(135deg, #ff4500 0%, #ff6347 100%);
+    border: none; border-radius: 50px; padding: 20px 35px;
+    color: white; cursor: pointer; font-weight: bold; font-size: 1.3rem;
+    box-shadow: 0 4px 15px rgba(255, 69, 0, 0.5);
+    animation: pulse 1.5s infinite; transition: transform 0.2s;
+}
+.reward-btn:hover { transform: scale(1.05); box-shadow: 0 6px 20px rgba(255, 69, 0, 0.7); }
+
 /* ===== НАВИГАЦИЯ (десктоп — левая панель) ===== */
 #main-navigation {
     position: absolute; left: 25px; top: 50%; transform: translateY(-50%);
@@ -60,7 +81,7 @@ body, html {
 .nav-btn .icon { font-size: 2rem; display: block; }
 .nav-btn span { font-size: 0.95rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; text-shadow: 0 2px 4px rgba(0,0,0,0.5); line-height: 1.2; }
 
-/* ===== АВТОБУС ===== */
+/* ===== АВТОБУС (десктоп) ===== */
 #bus-wrapper {
     position: absolute; bottom: 15%; right: 5%; z-index: 10;
     pointer-events: none; transition: transform 0.4s ease;
@@ -72,7 +93,7 @@ body, html {
 }
 .level-3-shift { transform: translateY(140px) !important; }
 
-/* ===== УРОВЕНЬ / ФУТЕР ===== */
+/* ===== ИНФОРМАЦИЯ О СТАНЦИИ (десктоп) ===== */
 #station-footer {
     position: absolute; bottom: 25px; left: 25px;
     background: rgba(0,0,0,0.85); padding: 20px; border-radius: 12px;
@@ -86,27 +107,6 @@ body, html {
     text-shadow: 0 0 10px rgba(0,255,204,0.3);
 }
 
-/* ===== КНОПКА НАСТРОЕК ===== */
-#settings-btn {
-    position: absolute; top: 20px; right: 20px; z-index: 101;
-    background: rgba(30,30,30,0.9); border: 2px solid #555; border-radius: 50%;
-    width: 45px; height: 45px; font-size: 1.4rem; cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    transition: 0.2s; box-shadow: 0 4px 10px rgba(0,0,0,0.4);
-}
-#settings-btn:hover { border-color: #ffd700; transform: scale(1.1); }
-
-/* ===== РЕКЛАМНЫЙ БОНУС ===== */
-#ad-bonus-container { position: absolute; right: 20px; top: 80px; z-index: 110; }
-.reward-btn {
-    background: linear-gradient(135deg, #ff4500 0%, #ff6347 100%);
-    border: none; border-radius: 50px; padding: 20px 35px;
-    color: white; cursor: pointer; font-weight: bold; font-size: 1.3rem;
-    box-shadow: 0 4px 15px rgba(255, 69, 0, 0.5);
-    animation: pulse 1.5s infinite; transition: transform 0.2s;
-}
-.reward-btn:hover { transform: scale(1.05); box-shadow: 0 6px 20px rgba(255, 69, 0, 0.7); }
-
 /* ===== ОВЕРЛЕЙ И МОДАЛЬНЫЕ ОКНА ===== */
 #overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: none; z-index: 50; cursor: default; }
 #overlay.active { display: block; }
@@ -117,7 +117,7 @@ body, html {
     z-index: 1000; display: none; opacity: 0; transition: 0.2s; cursor: default;
 }
 .modal-window.active { display: block; opacity: 1; transform: translate(-50%, -50%) scale(1); }
-.modal-header { padding: 15px; border-bottom: 1px solid #444; display: flex; justify-content: space-between; }
+.modal-header { padding: 15px; border-bottom: 1px solid #444; display: flex; justify-content: space-between; align-items: center; }
 .modal-header h3 { margin: 0; color: #ffd700; }
 .close-btn { background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer; }
 .modal-content { padding: 15px; }
@@ -134,7 +134,7 @@ body, html {
 .upg-info p { margin: 0; font-size: 0.85rem; color: #aaa; }
 .upg-cost { background: #ffd700; color: #000; padding: 8px 12px; border-radius: 8px; font-weight: bold; white-space: nowrap; }
 
-/* ===== КНОПКА КУПИТЬ / ИГРАТЬ ===== */
+/* ===== КНОПКИ ===== */
 .buy-bus-btn {
     background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
     color: white; border: none; padding: 16px 30px; border-radius: 12px;
@@ -146,7 +146,7 @@ body, html {
 .buy-bus-btn:active { transform: translateY(0) scale(0.98); }
 .warning { color: #ff4444; font-size: 0.8rem; text-align: center; margin-top: 10px; }
 
-/* ===== МИНИ-ИГРЫ ===== */
+/* ===== МИНИ-ИГРЫ (карточки выбора) ===== */
 .mg-container { padding: 10px 15px 15px; }
 .mg-card { background: #333; padding: 15px; margin-bottom: 10px; border-radius: 10px; text-align: center; }
 .mg-card h4 { margin: 0 0 5px; color: #ffd700; }
@@ -167,7 +167,7 @@ body, html {
 .setting-row input[type="range"] { width: 100%; accent-color: #ffd700; cursor: pointer; height: 6px; }
 #orientation-btn, #reset-btn {
     padding: 12px; background: #333; color: white; border: 2px solid #444;
-    border-radius: 10px; cursor: pointer; font-size: 1rem; transition: 0.2s;
+    border-radius: 10px; cursor: pointer; font-size: 1rem; transition: 0.2s; width: 100%;
 }
 #orientation-btn:hover { border-color: #00ffcc; background: #3a3a3a; }
 #reset-btn:hover { background: #cc0000; border-color: #ff6666; }
@@ -192,148 +192,238 @@ body, html {
 }
 
 /* ================================================================
-   📱 МОБИЛЬНАЯ ОПТИМИЗАЦИЯ (portrait, до 520px ширины)
+   📱 МОБИЛЬНАЯ ОПТИМИЗАЦИЯ (до 520px ширины)
+
+   Итоговые зоны на экране:
+   ┌───────────────────────────────────┐
+   │ [Баланс: XXX  В сек: X  Клик: X] [⚙️]  <- ~55px
+   │                                [🎁]     <- бонус (правый угол)
+   │                                          <- свободная зона
+   │                🚌 автобус                <- top: ~120px
+   │                                          <- свободная зона
+   │ [Станция]                                <- bottom: 73px
+   ├───────────────────────────────────┤
+   │      [🛠️]      [🚌]      [🧩]         <- нижний таббар 65px
+   └───────────────────────────────────┘
    ================================================================ */
 @media (max-width: 520px) {
 
-    /* --- СТАРТОВЫЙ ЭКРАН --- */
-    #start-screen h1 { font-size: 2.4rem; }
-    #play-btn { width: 200px; font-size: 1.4rem; padding: 15px; }
+    /* ── СТАРТОВЫЙ ЭКРАН ── */
+    #start-screen h1 { font-size: 2.2rem; }
+    #play-btn { width: 200px; font-size: 1.3rem; padding: 14px; }
 
-    /* --- СТАТИСТИКА: компактная строка вверху --- */
+    /* ── СТАТИСТИКА: от левого края до правого, оставляем 50px для ⚙️ ── */
     #stats-panel {
         top: 8px;
         left: 8px;
-        right: 8px;
+        right: 58px;       /* ← оставляем место для кнопки настроек */
         transform: none;
         width: auto;
-        padding: 8px 14px;
-        gap: 10px;
+        padding: 7px 10px;
+        gap: 8px;
         border-radius: 12px;
         border-width: 2px;
         flex-wrap: nowrap;
+        align-items: center;
         justify-content: space-between;
     }
-    .stat-item {
-        font-size: 1.45rem;
-        white-space: nowrap;
-    }
-    .stat-divider { width: 1px; height: 32px; }
-    .stat-group { gap: 2px; }
-    .stat-item.mini { font-size: 0.85rem; }
+    .stat-item { font-size: 1.2rem; white-space: nowrap; line-height: 1.1; }
+    .stat-divider { width: 1px; height: 28px; flex-shrink: 0; }
+    .stat-group { gap: 1px; }
+    .stat-item.mini { font-size: 0.78rem; color: #00ffcc; }
 
-    /* --- КНОПКА НАСТРОЕК: прячем под стату --- */
+    /* ── КНОПКА НАСТРОЕК: отдельно в верхнем правом углу, НЕ перекрывает стату ── */
     #settings-btn {
         top: 8px;
         right: 8px;
-        width: 36px;
-        height: 36px;
-        font-size: 1.1rem;
-        z-index: 102;
+        width: 42px;
+        height: 42px;
+        font-size: 1.2rem;
+        z-index: 102;       /* выше, чтобы кликалась */
     }
 
-    /* --- РЕКЛАМНЫЙ БОНУС: под статой, не перекрывает --- */
+    /* ── БОНУС РЕКЛАМА: правый угол, ниже ⚙️, компактный ── */
     #ad-bonus-container {
-        right: auto;
-        left: 50%;
-        transform: translateX(-50%);
-        top: 70px;
-        width: max-content;
-        z-index: 110;
+        top: 58px;          /* ниже stats-panel + зазор */
+        right: 8px;
+        left: auto;
+        transform: none;
     }
     .reward-btn {
-        padding: 10px 18px;
-        font-size: 0.95rem;
-        border-radius: 25px;
+        padding: 7px 12px;
+        font-size: 0.75rem;
+        border-radius: 18px;
         white-space: nowrap;
     }
 
-    /* --- НАВИГАЦИЯ: нижний таббар (как в нормальных мобильных играх) --- */
+    /* ── НАВИГАЦИЯ: нижний таббар ── */
     #main-navigation {
         position: absolute;
-        left: 0; right: 0; bottom: 0; top: auto;
+        left: 0; right: 0;
+        bottom: 0; top: auto;
         transform: none;
         flex-direction: row;
         justify-content: stretch;
         gap: 0;
-        background: rgba(15, 15, 15, 0.97);
-        border-top: 2px solid #444;
-        padding: 6px 4px;
-        padding-bottom: max(6px, env(safe-area-inset-bottom));
+        background: rgba(12, 12, 12, 0.97);
+        border-top: 2px solid #3a3a3a;
+        padding: 5px 4px;
+        padding-bottom: max(5px, env(safe-area-inset-bottom));
         z-index: 200;
+        height: 65px;
     }
     .nav-btn {
         flex: 1;
         width: auto;
-        padding: 8px 4px;
+        min-width: 0;
+        padding: 4px 2px;
         border-radius: 10px;
         border: 2px solid transparent;
         box-shadow: none;
-        gap: 4px;
+        gap: 3px;
         background: transparent;
     }
     .nav-btn:hover, .nav-btn:active {
         border-color: #ffd700;
-        background: rgba(255,215,0,0.08);
+        background: rgba(255,215,0,0.1);
         transform: none;
         box-shadow: none;
     }
-    .nav-btn .icon { font-size: 1.6rem; }
-    .nav-btn span { font-size: 0.62rem; letter-spacing: 0; }
+    .nav-btn .icon { font-size: 1.55rem; }
+    .nav-btn span { font-size: 0.58rem; letter-spacing: 0; }
 
-    /* --- АВТОБУС: смещаем вверх, т.к. таббар внизу --- */
+    /* ── АВТОБУС: середина экрана, не залезает ни на стату, ни на таббар ── */
     #bus-wrapper {
-        bottom: 18%;
-        right: 2%;
+        position: absolute;
+        top: 110px;        /* ниже stats-panel */
+        bottom: auto;
+        right: 0;
+        left: 0;
+        display: flex;
+        justify-content: flex-end;
+        align-items: flex-start;
+        padding-right: 6px;
+        pointer-events: none;
     }
     #current-bus-img {
         max-width: 70vw;
-        max-height: 42vh;
+        max-height: 40vh;
     }
+    /* Убираем translateY-смещение для уровня 3 (позиционируем через top) */
+    .level-3-shift { transform: none !important; }
 
-    /* --- ИНФОРМАЦИЯ О СТАНЦИИ: над таббаром --- */
+    /* ── ИНФОРМАЦИЯ О СТАНЦИИ: прямо над таббаром ── */
     #station-footer {
-        bottom: 68px;
+        position: absolute;
+        bottom: 72px;       /* 65px (таббар) + 7px зазор */
         left: 8px;
-        padding: 10px 14px;
+        right: auto;
+        padding: 8px 12px;
         min-width: 0;
-        max-width: 65vw;
+        max-width: 58vw;    /* не налезает на автобус */
         border-left-width: 4px;
+        border-radius: 10px;
+        background: rgba(0,0,0,0.9);
     }
-    .station-details h2 { font-size: 1.1rem; }
-    .station-details p { font-size: 0.85rem; }
-    #current-bus-label { font-size: 0.95rem !important; margin-top: 4px !important; }
+    .station-details h2 {
+        font-size: 0.92rem;
+        margin: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .station-details p { font-size: 0.75rem; margin: 2px 0 0; }
+    #current-bus-label {
+        font-size: 0.78rem !important;
+        margin-top: 2px !important;
+    }
 
-    /* --- МОДАЛЬНЫЕ ОКНА: почти полный экран --- */
+    /* ── МОДАЛЬНЫЕ ОКНА ── */
     .modal-window {
         width: 96vw;
-        max-height: 78vh;
+        max-height: 82vh;
         overflow-y: auto;
-        border-radius: 16px;
+        border-radius: 14px;
         border-width: 2px;
-        top: 50%;
+        top: 48%;
     }
-    .modal-content { padding: 12px; }
-    .modal-header { padding: 12px 14px; }
-    .modal-header h3 { font-size: 1.1rem; }
+    .modal-content { padding: 10px 12px; }
+    .modal-header { padding: 10px 12px; }
+    .modal-header h3 { font-size: 1rem; }
 
-    /* --- УЛУЧШЕНИЯ: компактнее --- */
-    .upgrade-card { padding: 12px; margin-bottom: 8px; }
-    .upg-info h4 { font-size: 0.95rem; }
-    .upg-cost { padding: 6px 10px; font-size: 0.9rem; }
+    /* ── УЛУЧШЕНИЯ ── */
+    .upgrade-card { padding: 10px 12px; margin-bottom: 7px; }
+    .upg-info h4 { font-size: 0.9rem; }
+    .upg-info p { font-size: 0.78rem; }
+    .upg-cost { padding: 6px 9px; font-size: 0.82rem; }
+    .warning { font-size: 0.75rem; }
 
-    /* --- КНОПКА КУПИТЬ --- */
-    .buy-bus-btn { font-size: 1rem; padding: 13px; }
-    #next-bus-name { font-size: 1.2rem; }
+    /* ── МАГАЗИН ── */
+    #next-bus-name { font-size: 1.1rem; }
+    .buy-bus-btn { font-size: 0.95rem; padding: 12px; margin-top: 10px; }
+
+    /* ── МИНИ-ИГРЫ (карточки) ── */
+    .mg-container { padding: 8px 10px 10px; }
+    .mg-card { padding: 10px 12px; margin-bottom: 8px; }
+    .mg-card h4 { font-size: 0.95rem; }
+    .mg-card p { font-size: 0.78rem; }
+    .mg-card button { font-size: 0.9rem; padding: 9px; }
 }
 
 /* ================================================================
    🎮 МИНИ-ИГРА: ДИСПЕТЧЕР
-   Справочник — выдвигающаяся панель справа
-   В game.js добавить структуру:
-   <div id="dispatch-hint-panel" class="dispatch-hint">...</div>
-   <button id="dispatch-hint-toggle" class="dispatch-hint-toggle">📋</button>
+   Контейнер создаётся в game.js через startTechInspectionGame()
+   Оптимизирован под мобильный экран — суть игры не меняется
    ================================================================ */
+
+#tech-inspection-game {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: #1a1a1a;
+    z-index: 500;
+    display: none;
+    flex-direction: column;
+    overflow: hidden;
+}
+#tech-inspection-game.active { display: flex; }
+
+/* Основная рабочая область (справа оставляем место для кнопки справочника) */
+.dispatch-game-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 12px 48px 12px 12px;
+    gap: 10px;
+    overflow: hidden;
+    min-height: 0;
+}
+
+/* Шапка: таймер, счёт, промахи */
+.dispatch-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(30,30,30,0.95);
+    border: 2px solid #444;
+    border-radius: 10px;
+    padding: 8px 12px;
+    flex-shrink: 0;
+}
+.dh-item { flex: 1; text-align: center; }
+.dh-label { font-size: 0.7rem; color: #aaa; margin-bottom: 2px; }
+.dh-val { font-size: 1.1rem; color: #ffd700; font-weight: bold; }
+
+/* Тело игры — центрировано по вертикали */
+.dispatch-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 10px;
+    min-height: 0;
+}
+.dispatch-task { text-align: center; }
+.dispatch-task p { color: #aaa; font-size: 0.9rem; margin: 0 0 6px; }
 
 /* Кнопка-рычаг для открытия справочника */
 .dispatch-hint-toggle {
@@ -346,173 +436,155 @@ body, html {
     border: none;
     border-radius: 10px 0 0 10px;
     width: 38px;
-    height: 70px;
-    font-size: 1.3rem;
+    height: 68px;
+    font-size: 1.25rem;
     cursor: pointer;
-    z-index: 50;
+    z-index: 60;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: -3px 0 10px rgba(0,0,0,0.4);
+    box-shadow: -3px 0 10px rgba(0,0,0,0.5);
     transition: background 0.2s;
+    touch-action: manipulation;
 }
 .dispatch-hint-toggle:hover { background: #ffe44d; }
 
-/* Панель справочника */
+/* Справочник — скользит справа */
 .dispatch-hint {
     position: absolute;
-    right: -260px;      /* скрыта по умолчанию */
+    right: -270px;
     top: 0;
-    width: 255px;
+    width: 265px;
     height: 100%;
-    background: rgba(20, 20, 20, 0.97);
+    background: rgba(16, 16, 16, 0.98);
     border-left: 3px solid #ffd700;
     padding: 14px 12px 14px 14px;
     overflow-y: auto;
     transition: right 0.3s ease;
-    z-index: 40;
+    z-index: 70;
     font-size: 0.82rem;
     line-height: 1.5;
 }
 .dispatch-hint.open { right: 0; }
 .dispatch-hint h4 { color: #ffd700; margin: 0 0 10px; font-size: 0.95rem; }
-.dispatch-hint .hint-row {
+
+.hint-row {
     display: flex;
     justify-content: space-between;
-    padding: 4px 0;
-    border-bottom: 1px solid #333;
+    padding: 5px 0;
+    border-bottom: 1px solid #2a2a2a;
     gap: 8px;
 }
-.dispatch-hint .hint-code { color: #00ffcc; font-weight: bold; flex-shrink: 0; }
-.dispatch-hint .hint-val  { color: #ddd; text-align: right; }
+.hint-code { color: #00ffcc; font-weight: bold; flex-shrink: 0; }
+.hint-val  { color: #ddd; text-align: right; }
 
-/* Контейнер самой мини-игры диспетчер */
-#tech-inspection-game {
-    position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: #1a1a1a;
-    z-index: 500;
-    display: none;
-    flex-direction: column;
-    overflow: hidden;
-}
-#tech-inspection-game.active { display: flex; }
-
-/* Основная область игры (без справочника) */
-.dispatch-game-area {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    padding: 14px;
-    padding-right: 46px; /* место для рычага справочника */
-    gap: 12px;
-    overflow: hidden;
+@media (max-width: 520px) {
+    .dispatch-game-area { padding: 10px 44px 10px 10px; gap: 8px; }
+    .dispatch-hint { width: 80vw; max-width: 300px; font-size: 0.8rem; }
+    .dispatch-hint-toggle { width: 34px; height: 58px; font-size: 1.1rem; }
+    .dh-val { font-size: 1rem; }
+    .dh-label { font-size: 0.62rem; }
+    .dispatch-task p { font-size: 0.85rem; }
 }
 
 /* ================================================================
-   🚌 МИНИ-ИГРА: МАРШРУТ (Route)
-   Трасса должна быть широкой, кнопка остановки — крупной
+   🚌 МИНИ-ИГРА: МАРШРУТ
+   Контейнер создаётся в game.js через startRouteGame()
+   Суть игры та же — оптимизирован под мобиль:
+   • трасса занимает всё свободное пространство
+   • остановки широкие (44px)
+   • кнопка СТОП крупная и удобная для пальца
    ================================================================ */
 
-/* Контейнер мини-игры маршрут */
 #route-game {
     position: absolute;
     top: 0; left: 0; right: 0; bottom: 0;
-    background: #1a1a1a;
+    background: #1a1a2e;
     z-index: 500;
     display: none;
     flex-direction: column;
-    align-items: center;
-    justify-content: space-between;
-    padding: 16px 12px;
+    align-items: stretch;
+    padding: 10px;
+    gap: 8px;
     overflow: hidden;
 }
 #route-game.active { display: flex; }
 
-/* Информационная строка вверху */
+/* Шапка */
 .route-header {
-    width: 100%;
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    background: rgba(30,30,30,0.9);
+    justify-content: space-between;
+    background: rgba(30,30,30,0.95);
     border: 2px solid #444;
     border-radius: 10px;
-    padding: 8px 14px;
+    padding: 8px 12px;
+    flex-shrink: 0;
 }
-.route-header .rh-item { text-align: center; }
-.route-header .rh-label { font-size: 0.7rem; color: #aaa; }
-.route-header .rh-val   { font-size: 1.1rem; color: #ffd700; font-weight: bold; }
+.rh-item { text-align: center; flex: 1; }
+.rh-label { font-size: 0.68rem; color: #aaa; }
+.rh-val   { font-size: 1rem; color: #ffd700; font-weight: bold; line-height: 1.2; }
 
-/* ТРАССА — теперь высокая и занимает большую часть экрана */
+/* Трасса занимает всё оставшееся место */
 .route-track-wrapper {
     flex: 1;
-    width: 100%;
-    position: relative;
+    min-height: 0;
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    margin: 10px 0;
 }
-
 .route-track {
+    flex: 1;
     width: 100%;
-    height: 100%;                   /* заполняет весь контейнер */
-    min-height: 220px;
-    background: #2a2a2a;
-    border: 2px solid #444;
+    background: #16213e;
+    border: 2px solid #333;
     border-radius: 12px;
     position: relative;
     overflow: hidden;
 }
 
-/* Дорога внутри трека */
+/* Широкая дорога по центру */
 .route-road {
     position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
+    left: 50%; transform: translateX(-50%);
     top: 0; bottom: 0;
-    width: 70%;                     /* широкая дорога */
-    background: #3a3a3a;
+    width: 60%;
+    background: #2d3561;
+    border-left: 3px solid #3a4080;
+    border-right: 3px solid #3a4080;
 }
 
-/* Разметка дороги */
+/* Движущаяся разметка */
 .route-road-line {
     position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 6px;
-    top: 0; bottom: 0;
+    left: 50%; transform: translateX(-50%);
+    width: 5px; top: 0; bottom: 0;
     background: repeating-linear-gradient(
-        to bottom,
-        #ffd700 0px, #ffd700 20px,
-        transparent 20px, transparent 40px
+        to bottom, #ffd700 0px, #ffd700 22px, transparent 22px, transparent 44px
     );
-    animation: roadScroll 0.6s linear infinite;
+    animation: roadScroll 0.5s linear infinite;
+    z-index: 2;
 }
 @keyframes roadScroll {
     from { background-position: 0 0; }
-    to   { background-position: 0 40px; }
+    to   { background-position: 0 44px; }
 }
 
-/* Автобус на трассе */
+/* Автобус */
 .route-bus {
     position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 3rem;
-    transition: top 0.15s linear;
-    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.6));
+    left: 50%; transform: translateX(-50%);
+    font-size: 2.8rem;
     z-index: 10;
+    filter: drop-shadow(0 3px 6px rgba(0,0,0,0.7));
+    transition: top 0.05s linear;
+    line-height: 1;
 }
 
-/* ОСТАНОВКИ — теперь широкие, заметные */
+/* Остановки — широкие, хорошо попасть пальцем */
 .route-stop {
     position: absolute;
     left: 0; right: 0;
-    height: 36px;                   /* высокая зона остановки */
-    background: rgba(255, 215, 0, 0.18);
+    height: 44px;
+    background: rgba(255, 215, 0, 0.14);
     border-top: 3px solid #ffd700;
     border-bottom: 3px solid #ffd700;
     display: flex;
@@ -521,249 +593,72 @@ body, html {
     font-size: 0.85rem;
     color: #ffd700;
     font-weight: bold;
+    z-index: 5;
+    pointer-events: none;
+    white-space: nowrap;
+    overflow: hidden;
 }
-.route-stop::before {
-    content: '🚏';
-    margin-right: 6px;
-    font-size: 1.1rem;
-}
-
-/* Красная зона «промахнулся» */
-.route-stop.danger {
-    background: rgba(255, 68, 68, 0.15);
+.route-stop::before { content: '🚏'; margin-right: 6px; font-size: 1.2rem; flex-shrink: 0; }
+.route-stop.missed {
+    background: rgba(255,68,68,0.14);
     border-color: #ff4444;
     color: #ff4444;
 }
 
-/* БОЛЬШАЯ КНОПКА ОСТАНОВКИ */
+/* Всплывающий результат попадания/промаха */
+.route-result-popup {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0,0,0,0.88);
+    border: 3px solid #ffd700;
+    border-radius: 14px;
+    padding: 14px 22px;
+    text-align: center;
+    z-index: 20;
+    animation: popIn 0.2s ease;
+    pointer-events: none;
+    min-width: 150px;
+}
+.route-result-popup .rp-emoji { font-size: 2.2rem; line-height: 1; }
+.route-result-popup .rp-text  { font-size: 0.9rem; color: #fff; margin-top: 4px; }
+.route-result-popup .rp-bonus { font-size: 1.1rem; color: #ffd700; font-weight: bold; margin-top: 2px; }
+@keyframes popIn {
+    from { transform: translate(-50%,-50%) scale(0.7); opacity: 0; }
+    to   { transform: translate(-50%,-50%) scale(1);   opacity: 1; }
+}
+
+/* Кнопка СТОП — крупная, удобная для мобила */
 .route-stop-btn {
     width: 100%;
-    padding: 22px;
-    font-size: 1.4rem;
+    padding: 18px;
+    font-size: 1.3rem;
     font-weight: 900;
-    background: linear-gradient(135deg, #ff4500 0%, #ff6347 100%);
+    background: linear-gradient(135deg, #c0392b 0%, #e74c3c 100%);
     color: white;
     border: none;
-    border-radius: 16px;
+    border-radius: 14px;
     cursor: pointer;
     letter-spacing: 1px;
-    box-shadow: 0 6px 20px rgba(255,69,0,0.5);
-    transition: all 0.1s;
+    box-shadow: 0 5px 18px rgba(192,57,43,0.5);
+    transition: all 0.08s;
     text-transform: uppercase;
     flex-shrink: 0;
     -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
 }
 .route-stop-btn:active {
     transform: scale(0.96);
-    box-shadow: 0 2px 8px rgba(255,69,0,0.4);
+    box-shadow: 0 2px 8px rgba(192,57,43,0.4);
+    background: linear-gradient(135deg, #a93226 0%, #cb4335 100%);
 }
 
-/* Результат хода */
-.route-result-popup {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: rgba(0,0,0,0.85);
-    border: 3px solid #ffd700;
-    border-radius: 14px;
-    padding: 16px 24px;
-    text-align: center;
-    z-index: 20;
-    animation: popIn 0.25s ease;
-    pointer-events: none;
-}
-.route-result-popup .rp-emoji { font-size: 2.5rem; }
-.route-result-popup .rp-text  { font-size: 1rem; color: #fff; margin-top: 4px; }
-.route-result-popup .rp-bonus { font-size: 1.2rem; color: #ffd700; font-weight: bold; }
-@keyframes popIn {
-    from { transform: translate(-50%, -50%) scale(0.7); opacity: 0; }
-    to   { transform: translate(-50%, -50%) scale(1); opacity: 1; }
-}
-
-/* ================================================================
-   📱 МОБИЛЬНЫЕ ПРАВКИ ДЛЯ МИНИ-ИГР
-   ================================================================ */
 @media (max-width: 520px) {
-    /* Диспетчер: справочник на полную высоту */
-    .dispatch-hint { width: 75vw; max-width: 280px; font-size: 0.78rem; }
-    .dispatch-hint-toggle { height: 60px; width: 34px; font-size: 1.1rem; }
-
-    /* Маршрут: кнопка ещё крупнее на мобиле */
-    .route-stop-btn { padding: 26px; font-size: 1.6rem; border-radius: 18px; }
-    .route-bus { font-size: 2.5rem; }
-
-    /* Модалки мини-игр чуть пошире */
-    #minigames-window { max-height: 75vh; }
-    .mg-container { padding: 8px 10px 10px; }
-    .mg-card { padding: 12px; }
-    .mg-card button { font-size: 0.95rem; }
-}
-
-/* 🎮 МИНИ-ИГРА: ДИСПЕТЧЕР */
-#tech-inspection-game {
-    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,0.9); z-index: 1500;
-    display: none; opacity: 0; transition: opacity 0.3s;
-}
-#tech-inspection-game.active { display: block; opacity: 1; }
-
-.dispatch-game-area {
-    padding: 20px; max-width: 500px; margin: 0 auto;
-}
-.dispatch-header {
-    display: flex; justify-content: space-between; align-items: center;
-    background: #222; padding: 12px 15px; border-radius: 12px; margin-bottom: 20px;
-}
-.dh-item { text-align: center; }
-.dh-label { font-size: 0.75rem; color: #aaa; }
-.dh-val { font-size: 1.3rem; font-weight: bold; color: #ffd700; }
-
-.dispatch-body {
-    background: #1e1e1e; padding: 20px; border-radius: 15px;
-    border: 2px solid #ffd700;
-}
-.dispatch-task p { margin: 0 0 10px; color: #ccc; }
-
-.dispatch-hint-toggle {
-    position: fixed; right: 15px; top: 50%; transform: translateY(-50%);
-    width: 45px; height: 45px; border-radius: 50%;
-    background: #ffd700; border: none; font-size: 1.5rem;
-    cursor: pointer; box-shadow: 0 4px 15px rgba(255,215,0,0.4);
-    z-index: 1600; transition: transform 0.2s;
-}
-.dispatch-hint-toggle:hover { transform: translateY(-50%) scale(1.1); }
-
-.dispatch-hint {
-    position: fixed; right: -300px; top: 0; width: 280px; height: 100%;
-    background: #1a1a2e; border-left: 3px solid #ffd700;
-    padding: 20px; overflow-y: auto; transition: right 0.3s ease;
-    z-index: 1550; box-shadow: -5px 0 20px rgba(0,0,0,0.5);
-}
-.dispatch-hint.open { right: 0; }
-.dispatch-hint h4 { color: #ffd700; margin: 0 0 15px; }
-.hint-row {
-    display: flex; justify-content: space-between; padding: 8px 0;
-    border-bottom: 1px solid #333; font-size: 0.9rem;
-}
-.hint-code { color: #00ffcc; font-weight: bold; }
-.hint-val { color: #ccc; }
-
-/* 🎮 МИНИ-ИГРА: МАРШРУТ */
-#route-game {
-    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,0.9); z-index: 1500;
-    display: none; opacity: 0; transition: opacity 0.3s;
-}
-#route-game.active { display: block; opacity: 1; }
-
-.route-header {
-    display: flex; justify-content: space-between; align-items: center;
-    background: #222; padding: 10px 15px; border-radius: 12px; margin: 15px;
-}
-.rh-item { text-align: center; flex: 1; }
-.rh-label { font-size: 0.7rem; color: #aaa; }
-.rh-val { font-size: 1.2rem; font-weight: bold; color: #ffd700; }
-
-.route-track-wrapper {
-    position: absolute; top: 70px; left: 0; width: 100%; height: calc(100% - 180px);
-    overflow: hidden;
-}
-.route-track {
-    position: relative; width: 100%; height: 100%;
-    background: linear-gradient(to bottom, #2a2a4a 0%, #1a1a2e 100%);
-}
-.route-road {
-    position: absolute; left: 50%; transform: translateX(-50%);
-    width: 60px; height: 100%; background: #333; border-radius: 30px;
-}
-.route-road-line {
-    position: absolute; left: 50%; transform: translateX(-50%);
-    width: 4px; height: 100%; background: repeating-linear-gradient(
-        to bottom, #ffd700 0px, #ffd700 20px, transparent 20px, transparent 40px
-    );
-}
-.route-bus {
-    position: absolute; left: 50%; transform: translateX(-50%);
-    font-size: 2.5rem; transition: top 0.05s linear; z-index: 10;
-}
-.route-stop {
-    position: absolute; left: 50%; transform: translateX(-50%);
-    background: rgba(255,215,0,0.2); border: 2px solid #ffd700;
-    border-radius: 10px; padding: 8px 15px; font-size: 0.85rem;
-    color: #ffd700; white-space: nowrap; z-index: 5;
-}
-
-.route-stop-btn {
-    position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
-    width: 80%; max-width: 300px; padding: 20px;
-    font-size: 1.5rem; background: linear-gradient(135deg, #ff9800, #f57c00);
-    color: white; border: none; border-radius: 15px; cursor: pointer;
-    font-weight: bold; box-shadow: 0 8px 25px rgba(255,152,0,0.5);
-    transition: transform 0.1s;
-}
-.route-stop-btn:active { transform: translateX(-50%) scale(0.98); }
-
-.route-result-popup {
-    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-    background: rgba(0,0,0,0.9); padding: 20px 30px; border-radius: 15px;
-    border: 2px solid #ffd700; text-align: center; z-index: 20;
-    animation: popupFade 1.2s ease-out forwards;
-}
-.rp-emoji { font-size: 2.5rem; margin-bottom: 5px; }
-.rp-text { color: #fff; font-weight: bold; margin-bottom: 5px; }
-.rp-bonus { color: #00ffcc; font-size: 1.2rem; }
-
-@keyframes popupFade {
-    0% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-    100% { opacity: 0; transform: translate(-50%, -70%) scale(1.1); }
-}
-
-/* 📱 МОБИЛЬНАЯ АДАПТАЦИЯ */
-@media (max-width: 768px) {
-    #main-navigation {
-        position: fixed; bottom: 0; left: 0; width: 100%;
-        flex-direction: row; justify-content: space-around;
-        padding: 8px 0; background: rgba(20,20,20,0.95);
-        border-top: 2px solid #333; z-index: 200;
-        transform: none; top: auto;
-    }
-    .nav-btn {
-        width: 70px; padding: 10px 5px; font-size: 0.75rem;
-    }
-    .nav-btn .icon { font-size: 1.5rem; margin-bottom: 3px; }
-    
-    #stats-panel {
-        padding: 10px 20px; font-size: 1.1rem;
-    }
-    .stat-item { font-size: 1.3rem; }
-    .stat-divider { height: 30px; }
-    
-    .modal-window {
-        width: 95%; max-width: 400px;
-    }
-    
-    #station-footer {
-        bottom: 70px; left: 15px; right: 15px;
-        min-width: auto;
-    }
-    
-    #bus-wrapper {
-        bottom: 85px; right: 10px;
-    }
-    #current-bus-img {
-        max-width: 45vw; max-height: 35vh;
-    }
-    
-    .upgrade-card {
-        padding: 12px; font-size: 0.9rem;
-    }
-    
-    #ad-bonus-container {
-        right: 50%; transform: translateX(50%);
-        top: auto; bottom: 80px;
-    }
-    .reward-btn {
-        padding: 12px 20px; font-size: 1rem;
-    }
+    #route-game { padding: 8px; gap: 6px; }
+    .route-header { padding: 6px 10px; }
+    .rh-val { font-size: 0.92rem; }
+    .rh-label { font-size: 0.6rem; }
+    .route-bus { font-size: 2.4rem; }
+    .route-stop { height: 48px; font-size: 0.8rem; }
+    .route-stop-btn { padding: 20px; font-size: 1.45rem; border-radius: 16px; }
 }
