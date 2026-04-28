@@ -395,7 +395,7 @@ body, html { margin: 0; padding: 0; width: 100%; height: 100%; font-family: 'Seg
     .tech-card { width: 100% !important; height: 60% !important; padding: 10px !important; }
     #disp-ticket { font-size: 2.5rem !important; letter-spacing: 8px !important; }
     #disp-options { grid-template-columns: 1fr !important; }
-}
+    }
 
     #stats-panel { padding: 8px 15px !important; min-height: 60px !important; }
     .stat-item { font-size: 1.1rem !important; }
@@ -495,3 +495,4 @@ body, html { margin: 0; padding: 0; width: 100%; height: 100%; font-family: 'Seg
         padding: 10px !important;
         font-size: 0.85rem !important;
     }
+}
