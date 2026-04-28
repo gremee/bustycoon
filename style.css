@@ -147,19 +147,6 @@ body, html { margin: 0; padding: 0; width: 100%; height: 100%; font-family: 'Seg
 .close-btn { background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer; }
 .modal-content { padding: 15px; }
 
-.modal-window, 
-#minigame-area {
-    overflow-y: auto !important;
-    -webkit-overflow-scrolling: touch;
-}
-
-.modal-content, 
-.mg-container,
-.tech-inspection-game {
-    max-height: 90vh;
-    overflow-y: auto;
-}
-
 /* =========================================
 🛠️ УЛУЧШЕНИЯ
 ========================================= */
@@ -447,22 +434,10 @@ body, html { margin: 0; padding: 0; width: 100%; height: 100%; font-family: 'Seg
     #stop-btn { bottom: 20px !important; padding: 12px 40px !important; font-size: 1.1rem !important; }
 
     #minigame-area {
-        background: rgba(0, 0, 0, 0.85) !important; /* Общий фон на весь экран */
-        display: flex;
-        justify-content: center;
-        align-items: flex-start; /* Чтобы при скролле верх не обрезался */
-        padding: 20px 0;
-    }
-    .route-header-compact {
-        padding: 5px 15px !important;
-        top: 10px !important;
-    }
-
-    .game-results-card {
-        max-height: 95vh !important;
-        overflow-y: auto !important;
-        padding: 20px !important;
-        margin: 10px auto !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        background: rgba(0,0,0,0.9) !important;
     }
 
     #minigame-area .close-btn {
@@ -520,10 +495,6 @@ body, html { margin: 0; padding: 0; width: 100%; height: 100%; font-family: 'Seg
         display: flex !important;
         flex-direction: column !important;
         justify-content: center !important;
-        background: #222 !important; /* Оставляем только фон самой карточки */
-        border: 2px solid #ffd700;
-        box-shadow: 0 0 20px rgba(0,0,0,0.5);
-        margin-top: 10px;
     }
 
     /* Делаем текст в диспетчере компактнее */
