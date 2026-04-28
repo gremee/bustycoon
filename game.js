@@ -733,27 +733,30 @@ function startTechInspectionGame() {
     gameArea.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.95);z-index:2000;overflow:hidden;';
 
     gameArea.innerHTML = `
-		<button onclick="forceCloseMinigame()" style="position:absolute;top:15px;right:20px;background:none;border:none;color:white;font-size:2.5rem;cursor:pointer;z-index:9999;">×</button>
-        <div style="display:flex;width:100%;height:100%;">
-            <div style="width:200px;min-width:200px;height:100%;background:rgba(255,255,255,0.04);border-right:1px solid #333;padding:18px;overflow-y:auto;flex-shrink:0;">
+        <button onclick="forceCloseMinigame()" style="position:absolute;top:10px;right:10px;background:#ff4444;border:none;color:white;font-size:1.8rem;width:40px;height:40px;border-radius:8px;cursor:pointer;z-index:10001;display:flex;align-items:center;justify-content:center;line-height:1;">×</button>
+        
+        <div id="disp-container" style="display:flex; width:95%; height:90vh; max-width:800px; margin:5vh auto; background:#111; border-radius:15px; border:2px solid #555; overflow:hidden;">
+            
+            <div class="tech-guide" style="width:200px;min-width:200px;height:100%;background:rgba(255,255,255,0.04);border-right:1px solid #333;padding:18px;overflow-y:auto;flex-shrink:0;">
                 <p style="color:#ffd700;font-weight:bold;font-size:1rem;margin:0 0 14px;text-align:center;">📖 ${t.dispManual}</p>
                 <p style="color:#aaa;font-size:0.75rem;margin:0 0 8px;text-transform:uppercase;">${t.dispFrom}</p>
                 ${cities.map((v, k) => `<div style="display:flex;align-items:center;gap:8px;margin:4px 0;"><span style="background:#333;color:#ffd700;width:24px;height:24px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:0.85rem;flex-shrink:0;">${k}</span><span style="color:#ddd;font-size:0.88rem;">${v}</span></div>`).join('')}
                 <div style="border-top:1px solid #444;margin:14px 0;"></div>
                 <p style="color:#aaa;font-size:0.75rem;margin:0 0 6px;text-transform:uppercase;">${t.dispType}</p>
-				${[
-					['1-2', '#4caf50', t.types[0]],
-					['3-5', '#2196f3', t.types[1]],
-					['6-8', '#ff9800', t.types[2]],
-					['9-0', '#e91e63', t.types[3]]
-				].map(([k, c, v]) => `
-					<div style="display:flex;align-items:center;gap:8px;margin:4px 0;">
-						<span style="background:#333;color:#ffd700;width:30px;height:24px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:0.75rem;flex-shrink:0;">${k}</span>
-						<span style="color:${c};font-size:0.85rem;">${v}</span>
-					</div>
-`).join('')}
+                ${[
+                    ['1-2', '#4caf50', t.types[0]],
+                    ['3-5', '#2196f3', t.types[1]],
+                    ['6-8', '#ff9800', t.types[2]],
+                    ['9-0', '#e91e63', t.types[3]]
+                ].map(([k, c, v]) => `
+                    <div style="display:flex;align-items:center;gap:8px;margin:4px 0;">
+                        <span style="background:#333;color:#ffd700;width:30px;height:24px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:0.75rem;flex-shrink:0;">${k}</span>
+                        <span style="color:${c};font-size:0.85rem;">${v}</span>
+                    </div>
+                `).join('')}
             </div>
-            <div style="flex:1;display:flex;flex-direction:column;align-items:center;padding:20px;overflow-y:auto;">
+            
+            <div class="tech-card" style="flex:1;display:flex;flex-direction:column;align-items:center;padding:20px;overflow-y:auto;">
                 <div style="text-align:center;margin-bottom:18px;">
                     <h2 style="color:#ffd700;font-size:1.8rem;margin:0;">📋 ${t.mgDispName.toUpperCase()}</h2>
                     <p style="color:#888;font-size:0.85rem;margin:5px 0 0;">${t.mgDispDesc}</p>
@@ -928,7 +931,7 @@ function startRouteGame() {
     gameArea.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);z-index:2000;display:flex;flex-direction:column;align-items:center;justify-content:center;';
     
     gameArea.innerHTML = `
-        <button onclick="forceCloseMinigame()" style="position:absolute;top:10px;right:10px;background:#ff4444;border:none;color:white;font-size:1.8rem;width:45px;height:45px;border-radius:10px;cursor:pointer;z-index:10001;">×</button>
+        <button onclick="forceCloseMinigame()" style="position:absolute;top:10px;right:10px;background:#ff4444;border:none;color:white;font-size:1.8rem;width:40px;height:40px;border-radius:8px;cursor:pointer;z-index:10001;display:flex;align-items:center;justify-content:center;line-height:1;">×</button>
         
         <div style="position:absolute;top:5vh;text-align:center;background:rgba(30,30,30,0.95);padding:10px 20px;border-radius:15px;border:2px solid #ffd700;width:90%;max-width:450px;">
             <h2 style="color:#ffd700;font-size:1.2rem;margin:0 0 5px;">${t.mgRouteName} №42</h2>
@@ -1037,11 +1040,14 @@ function endRouteGame(passengers, baseReward, maxStreak) {
 
     const gameArea = document.getElementById('minigame-area');
     if (gameArea) {
+        // ДОБАВЛЕНО: position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); - это жестко ставит по центру!
         gameArea.innerHTML = `
-            <div style="background:#222;padding:20px;border-radius:20px;border:3px solid #ffd700;width:90%;max-width:320px;text-align:center;box-shadow:0 0 30px rgba(0,0,0,1);">
+            <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:#222;padding:20px;border-radius:20px;border:3px solid #ffd700;width:90%;max-width:320px;text-align:center;box-shadow:0 0 30px rgba(0,0,0,1);">
                 <h2 style="color:#ffd700;font-size:1.5rem;margin:0 0 15px;">🏁 ${t.routeFinished}</h2>
                 <p style="color:#ccc;margin:5px 0;">👥 ${t.routeTransported}: <span style="color:#00ffcc;">${passengers}</span></p>
-                <p style="color:#ff9800;font-size:0.9rem;margin:5px 0;">⚡ Комбо: ${maxStreak}</p>
+                
+                <p style="color:#ff9800;font-size:0.95rem;margin:5px 0;">⚡ ${t.mgCombo}: <span style="font-weight:bold;">${maxStreak}</span></p>
+                <p style="color:#ffd700;font-size:0.95rem;margin:5px 0;">🏆 ${t.routeRecord}: <span style="font-weight:bold;">${miniGameStats.route.bestStreak}</span></p>
                 
                 <div style="background:#333;padding:15px;border-radius:10px;margin:15px 0;">
                     <p style="color:#ffd700;font-size:1.2rem;font-weight:bold;margin:0;">+${formatMoney(total+bonus)} ₽</p>
@@ -1054,7 +1060,6 @@ function endRouteGame(passengers, baseReward, maxStreak) {
     updateUI();
     saveProgress();
 }
-
 function closeMinigame() {
     // 1. Убираем элементы мини-игры с экрана (твой оригинальный код)
     const gameArea = document.getElementById('minigame-area');
