@@ -462,3 +462,54 @@ body, html { margin: 0; padding: 0; width: 100%; height: 100%; font-family: 'Seg
     .welcome-desc, .welcome-info-card, .welcome-start-btn { grid-column: 2; }
     .welcome-info-card { margin-bottom: 10px; padding: 10px; }
 }
+
+/* ПРАВКИ ТОЛЬКО ДЛЯ МОБИЛОК (до 600px ширины) */
+@media screen and (max-width: 600px) {
+    
+    /* 1. Окно приветствия: ужимаем всё, чтобы не листать */
+    .welcome-content {
+        width: 85% !important;
+        max-width: 300px !important;
+        padding: 15px !important;
+        max-height: 85vh !important;
+        font-size: 0.9rem !important;
+    }
+    
+    .welcome-emoji { font-size: 2rem !important; margin: 0 !important; }
+    .welcome-title { font-size: 1.2rem !important; margin: 5px 0 !important; }
+    .welcome-text { margin-bottom: 10px !important; line-height: 1.2 !important; }
+    
+    .welcome-stats-card {
+        margin: 8px 0 !important;
+        padding: 10px !important;
+    }
+    
+    .welcome-btn { padding: 10px !important; font-size: 1rem !important; }
+
+    /* 2. Диспетчер: убираем черный прямоугольник и лишние пустоты */
+    .tech-inspection-game {
+        height: auto !important; /* Даем окну самому определять высоту по контенту */
+        max-height: 90vh !important;
+        width: 95% !important;
+        padding: 10px !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: center !important;
+    }
+
+    /* Делаем текст в диспетчере компактнее */
+    .mg-task-text, .mg-timer {
+        font-size: 1rem !important;
+        margin: 5px 0 !important;
+    }
+
+    /* Кнопки ответов в ряд или плотнее */
+    .mg-buttons-grid {
+        gap: 8px !important;
+    }
+    
+    .mg-button {
+        padding: 10px !important;
+        font-size: 0.85rem !important;
+    }
+}
