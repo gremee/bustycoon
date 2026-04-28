@@ -397,24 +397,40 @@ body, html { margin: 0; padding: 0; width: 100%; height: 100%; font-family: 'Seg
     #disp-options { grid-template-columns: 1fr !important; }
     
     .welcome-content {
-        width: 85% !important;
-        max-width: 300px !important;
+        width: 90% !important;
+        max-width: 320px !important;
         padding: 15px !important;
-        max-height: 85vh !important;
-        font-size: 0.9rem !important;
+        
+        /* ИЗМЕНЕНИЕ: Убираем max-height или ставим overflow */
+        max-height: 90vh !important; 
+        height: auto !important;
+        display: flex !important;
+        flex-direction: column !important;
+        overflow-y: auto !important; /* Если текста станет СЛИШКОМ много, появится скролл ВНУТРИ окна */
     }
-    
+
+    /* 2. Уменьшаем отступы, чтобы всё влезло */
     .welcome-emoji { font-size: 2rem !important; margin: 0 !important; }
     .welcome-title { font-size: 1.2rem !important; margin: 5px 0 !important; }
-    .welcome-text { margin-bottom: 10px !important; line-height: 1.2 !important; }
-    
-    .welcome-stats-card {
-        margin: 8px 0 !important;
-        padding: 10px !important;
+    .welcome-desc { 
+        margin-bottom: 10px !important; 
+        font-size: 0.85rem !important; 
+        line-height: 1.2 !important; 
     }
-    
-    .welcome-btn { padding: 10px !important; font-size: 1rem !important; }
 
+    /* 3. Статы делаем компактнее */
+    .welcome-info-card {
+        margin: 5px 0 !important;
+        padding: 8px !important;
+    }
+
+    /* 4. Кнопка теперь точно будет внутри */
+    .welcome-start-btn { 
+        margin-top: 10px !important;
+        padding: 12px !important; 
+        font-size: 1rem !important; 
+        flex-shrink: 0; /* Чтобы кнопка не сжималась */
+    }
     /* 1. ГЛАВНЫЕ ПАНЕЛИ (Статистика и Навигация) */
     #stats-panel {
         top: 10px !important;
@@ -494,14 +510,34 @@ body, html { margin: 0; padding: 0; width: 100%; height: 100%; font-family: 'Seg
 
     /* 5. РЕКЛАМНЫЙ БОНУС */
     #ad-bonus-container {
-        top: auto !important;
-        bottom: 20px !important;
-        right: 10px !important;
+        top: 70px !important;
         transform: scale(0.8) !important;
-        transform-origin: right bottom !important;
+        position: absolute !important;
+        right: 10px !important; /* Отступ от правого края */
+        top: 70px !important;   /* Сдвигаем вниз от кнопки настроек (настройки обычно на 20px + их высота) */
+        bottom: auto !important; /* Отменяем привязку к низу, если она была */
+        z-index: 110 !important;
+        transform: scale(0.8) !important; /* Делаем чуть меньше, чтобы не была огромной */
+        transform-origin: right top !important;
     }
     
     .reward-btn { padding: 15px 25px !important; font-size: 1.1rem !important; }
+
+    #current-bus-img { 
+        /* Увеличиваем до 85% ширины экрана, чтобы автобус был крупным */
+        max-width: 85vw !important; 
+        /* Ограничиваем высоту, чтобы не перекрывал кнопки сверху */
+        max-height: 35vh !important;
+        /* Убедимся, что он центрируется или прижат правильно */
+        object-fit: contain; 
+    }
+
+    #bus-wrapper {
+        /* Опускаем чуть ниже к подвалу */
+        bottom: 12% !important;
+        right: 50% !important;
+        transform: translateX(50%) !important; /* Центрируем по горизонтали */
+    }
 
 }
 
