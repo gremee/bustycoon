@@ -919,10 +919,10 @@ function endDispatcherGame(score, misses, speedBonus, baseReward) {
 // 🚌 МИНИ-ИГРА: МАРШРУТ (x4 МЕНЬШЕ НАГРАДА)
 // ==========================================
 function startRouteGame() {
-	const t = i18n[currentLang];
+    const t = i18n[currentLang];
     closeAllMenus();
     document.getElementById('overlay').classList.add('active');
-    // ✅ УМЕНЬШЕНО В 4 РАЗА: было *90, стало *22
+    
     const baseReward = getSecPower() * 22;
     const passengersPerStop = Math.max(1, Math.floor(getSecPower() / 8));
 
@@ -930,7 +930,7 @@ function startRouteGame() {
     gameArea.id = 'minigame-area';
     gameArea.innerHTML = `
         <button onclick="forceCloseMinigame()" style="position:absolute;top:15px;right:20px;background:none;border:none;color:white;font-size:2.5rem;cursor:pointer;z-index:9999;">×</button>
-		<div style="position:absolute;top:20px;left:50%;transform:translateX(-50%);text-align:center;background:rgba(0,0,0,0.82);padding:15px 30px;border-radius:15px;border:2px solid #ffd700;max-width:90%;">
+        <div style="position:absolute;top:20px;left:50%;transform:translateX(-50%);text-align:center;background:rgba(0,0,0,0.82);padding:15px 30px;border-radius:15px;border:2px solid #ffd700;max-width:90%;">
             <h2 style="color:#ffd700;font-size:1.8rem;margin:0 0 8px;">${t.mgRouteName}№42</h2>
             <p style="color:#aaa;margin:0;font-size:0.95rem;">${t.routeTask}</p>
             <div style="display:flex;gap:30px;justify-content:center;margin-top:10px;">
@@ -953,13 +953,17 @@ function startRouteGame() {
     `;
     gameArea.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);z-index:2000;';
     document.body.appendChild(gameArea);
+
     let busPos = 0, passengers = 0, missed = 0, gameActive = true, canStop = false;
     let currentSpeed = 1.2, speedMultiplier = 1.0;
     let currentStreak = 0, maxStreakInGame = 0;
     const stopPosition = 75, baseStopZone = 12;
 
     const moveInterval = setInterval(() => {
-        if (!gameActive) return;
+        if (!gameActive) {
+            clearInterval(moveInterval); // Очищаем на всякий случай
+            return;
+        }
         busPos += currentSpeed * speedMultiplier;
         const busEl = document.getElementById('route-bus');
         if (busEl) busEl.style.left = busPos + '%';
@@ -969,29 +973,32 @@ function startRouteGame() {
         
         const btn = document.getElementById('stop-btn');
         if (btn) {
-            if (canStop) { btn.style.background='linear-gradient(135deg,#4caf50,#388e3c)'; btn.style.boxShadow='0 8px 25px rgba(76,175,80,0.6)'; }
-            else { btn.style.background='linear-gradient(135deg,#ff9800,#f57c00)'; btn.style.boxShadow='0 8px 25px rgba(255,152,0,0.5)'; }
+            if (canStop) { 
+                btn.style.background='linear-gradient(135deg,#4caf50,#388e3c)'; 
+                btn.style.boxShadow='0 8px 25px rgba(76,175,80,0.6)'; 
+            } else { 
+                btn.style.background='linear-gradient(135deg,#ff9800,#f57c00)'; 
+                btn.style.boxShadow='0 8px 25px rgba(255,152,0,0.5)'; 
+            }
         }
         
         if (busPos > 100) { 
-            // Игрок пропустил остановку!
-            if (currentStreak > miniGameStats.route.bestStreak) miniGameStats.route.bestStreak = currentStreak;
-            currentStreak = 0;
+            gameActive = false; // Сначала блокируем игру
             missed++;
             const missedEl = document.getElementById('missed');
             if (missedEl) missedEl.innerText = missed;
             
             if (missed >= 2) {
-                gameActive = false;
                 clearInterval(moveInterval);
-                setTimeout(() => endRouteGame(passengers, baseReward, maxStreakInGame), 500);
+                setTimeout(() => endRouteGame(passengers, baseReward, maxStreakInGame), 300);
             } else {
-                busPos = 0; 
-                canStop = false;
-                // Немного сбрасываем скорость после ошибки, чтобы дать шанс
-                speedMultiplier = Math.max(1.0, speedMultiplier - 0.5); 
-                const speedEl = document.getElementById('speed-display');
-                if (speedEl) speedEl.innerText = speedMultiplier.toFixed(1);
+                // Если не проиграли, возвращаем автобус и продолжаем
+                setTimeout(() => {
+                    busPos = 0;
+                    speedMultiplier = Math.max(1.0, speedMultiplier - 0.3);
+                    document.getElementById('speed-display').innerText = speedMultiplier.toFixed(1);
+                    gameActive = true; 
+                }, 500);
             }
         }
     }, 50);
@@ -1002,8 +1009,7 @@ function startRouteGame() {
         if (Math.abs(busPos - stopPosition) < currentZone && busPos < stopPosition + 5) {
             passengers += passengersPerStop;
             const reward = passengersPerStop * 10;
-            const speedBonus = Math.floor(reward * (speedMultiplier - 1) * 0.3);
-            const totalReward = reward + speedBonus;
+            const totalReward = reward + Math.floor(reward * (speedMultiplier - 1) * 0.3);
             balance += totalReward;
             
             currentStreak++;
@@ -1011,25 +1017,20 @@ function startRouteGame() {
             
             document.getElementById('passengers').innerText = passengers;
             createFloatingText(window.innerWidth/2, window.innerHeight/2-100, totalReward);
-            playPurchaseSound();
-            
-            const busEl = document.getElementById('route-bus');
-            if (busEl) { busEl.style.transform='scale(1.1)'; setTimeout(() => busEl.style.transform='scale(1)',200); }
             
             busPos = 0; 
-            canStop = false;
             speedMultiplier += 0.15;
-            if (speedMultiplier > 20) speedMultiplier = 20;
+            if (speedMultiplier > 15) speedMultiplier = 15;
             document.getElementById('speed-display').innerText = speedMultiplier.toFixed(1);
         } else {
-            if (currentStreak > miniGameStats.route.bestStreak) miniGameStats.route.bestStreak = currentStreak;
-            currentStreak = 0;
             missed++;
             document.getElementById('missed').innerText = missed;
             if (missed >= 2) {
                 gameActive = false;
                 clearInterval(moveInterval);
-                setTimeout(() => endRouteGame(passengers, baseReward, maxStreakInGame), 500);
+                endRouteGame(passengers, baseReward, maxStreakInGame);
+            } else {
+                busPos = 0; // Сброс позиции при ошибке нажатия
             }
         }
     }
@@ -1041,6 +1042,7 @@ function startRouteGame() {
 }
 
 function endRouteGame(passengers, baseReward, maxStreak) {
+    const t = i18n[currentLang]; // <--- ВОТ ЭТОГО НЕ ХВАТАЛО
     const total = passengers * 10;
     const bonus = passengers >= 10 ? Math.floor(baseReward * 0.5) : 0;
     balance += total + bonus;
@@ -1050,7 +1052,9 @@ function endRouteGame(passengers, baseReward, maxStreak) {
 
     const gameArea = document.getElementById('minigame-area');
     if (gameArea) {
+        // Удаляем обработчик пробела
         if (gameArea._spaceHandler) document.removeEventListener('keydown', gameArea._spaceHandler);
+        
         gameArea.innerHTML = `
             <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;background:#222;padding:40px;border-radius:20px;border:3px solid #ffd700;min-width:360px;max-width:90vw;">
                 <h2 style="color:#ffd700;font-size:2rem;margin:0 0 20px;">🏁 ${t.routeFinished}</h2>
@@ -1058,9 +1062,9 @@ function endRouteGame(passengers, baseReward, maxStreak) {
                 <p style="color:#ff9800;font-size:1rem;margin:8px 0;">⚡ ${t.routeBestCombo}: <span style="font-weight:bold;">${maxStreak}</span></p>
                 <p style="color:#ffd700;font-size:0.95rem;margin:8px 0;">🏆 ${t.routeRecord}: <span style="font-weight:bold;">${miniGameStats.route.bestStreak}</span></p>
                 <div style="background:#333;padding:20px;border-radius:10px;margin:20px 0;">
-				<p style="color:#aaa;margin:5px 0;">💰 ${t.routeMoneyForPass}: ${formatMoney(total)} ₽</p>
+                <p style="color:#aaa;margin:5px 0;">💰 ${t.routeMoneyForPass}: ${formatMoney(total)} ₽</p>
                     ${bonus > 0 ? `<p style="color:#4caf50;margin:5px 0;">🎁 ${t.routeBonus}: +${formatMoney(bonus)} ₽</p>` : ''}
-				<p style="color:#ffd700;font-size:1.4rem;font-weight:bold;margin:14px 0 0;padding-top:14px;border-top:2px solid #555;">${t.mgTotal}: +${formatMoney(total+bonus)} ₽</p>
+                <p style="color:#ffd700;font-size:1.4rem;font-weight:bold;margin:14px 0 0;padding-top:14px;border-top:2px solid #555;">${t.mgTotal}: +${formatMoney(total+bonus)} ₽</p>
                 </div>
                 <button onclick="closeMinigame()" style="padding:14px 0;width:100%;background:#28a745;color:white;border:none;border-radius:10px;font-size:1.1rem;font-weight:bold;cursor:pointer;">${t.continueBtn}</button>
             </div>
