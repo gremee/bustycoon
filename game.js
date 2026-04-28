@@ -693,10 +693,8 @@ window.addEventListener('DOMContentLoaded', () => {
 function startTechInspectionGame() {
     closeAllMenus();
     document.getElementById('overlay').classList.add('active');
-    // ✅ УМЕНЬШЕНО В 4 РАЗА: было *120, стало *30
     const baseReward = getSecPower() * 30;
     const rewardPerTicket = Math.floor(baseReward / 15);
-
     const t = i18n[currentLang]; 
     const cities = t.cities; 
     const busTypesArr = t.types;
@@ -706,92 +704,54 @@ function startTechInspectionGame() {
         let d2 = Math.floor(Math.random() * 10);
         while (d2 === d1) d2 = Math.floor(Math.random() * 10);
         const d3 = Math.floor(Math.random() * 10);
-        
-        // Логика выбора типа (как у тебя в коде, но берем из массива словаря)
-        let typeStr = "";
-        if (d3 === 1 || d3 === 2) typeStr = busTypesArr[0]; // Пригородный
-        else if (d3 >= 3 && d3 <= 5) typeStr = busTypesArr[1]; // Городской
-        else if (d3 >= 6 && d3 <= 8) typeStr = busTypesArr[2]; // Межобластной
-        else typeStr = busTypesArr[3]; // Скоростной
-
+        let typeStr = d3 === 1 || d3 === 2 ? busTypesArr[0] : (d3 >= 3 && d3 <= 5 ? busTypesArr[1] : (d3 >= 6 && d3 <= 8 ? busTypesArr[2] : busTypesArr[3]));
         const correct = `${cities[d1]} → ${cities[d2]} (${typeStr})`;
         const wrongs = new Set();
         while (wrongs.size < 3) {
-            const w1 = Math.floor(Math.random() * 10);
-            let w2 = Math.floor(Math.random() * 10);
-            while (w2 === w1) w2 = Math.floor(Math.random() * 10);
+            const w1 = Math.floor(Math.random() * 10), w2 = Math.floor(Math.random() * 10);
             const w3 = Math.floor(Math.random() * busTypesArr.length);
-			const wrong = `${cities[w1]} → ${cities[w2]} (${busTypesArr[w3]})`;
-            if (wrong !== correct) wrongs.add(wrong);
+            if (w1 !== w2) {
+                const wrong = `${cities[w1]} → ${cities[w2]} (${busTypesArr[w3]})`;
+                if (wrong !== correct) wrongs.add(wrong);
+            }
         }
         return { num: `${d1}${d2}${d3}`, correct, options: [correct, ...wrongs].sort(() => Math.random() - 0.5) };
     }
 
-    let score = 0, misses = 0, timeLeft = 45, gameActive = true;
-    let streak = 0, speedBonus = 0, currentQ = null, questionStartTime = 0;
-    let nextQuestionTimeout = null;
+    let score = 0, misses = 0, timeLeft = 45, gameActive = true, streak = 0, speedBonus = 0;
 
     const gameArea = document.createElement('div');
     gameArea.id = 'minigame-area';
-    gameArea.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.95);z-index:2000;overflow:hidden;';
-
     gameArea.innerHTML = `
-		<button onclick="forceCloseMinigame()" style="position:absolute;top:15px;right:20px;background:none;border:none;color:white;font-size:2.5rem;cursor:pointer;z-index:9999;">×</button>
-        <div style="display:flex;width:100%;height:100%;">
-            <div style="width:200px;min-width:200px;height:100%;background:rgba(255,255,255,0.04);border-right:1px solid #333;padding:18px;overflow-y:auto;flex-shrink:0;">
-                <p style="color:#ffd700;font-weight:bold;font-size:1rem;margin:0 0 14px;text-align:center;">📖 ${t.dispManual}</p>
-                <p style="color:#aaa;font-size:0.75rem;margin:0 0 8px;text-transform:uppercase;">${t.dispFrom}</p>
-                ${cities.map((v, k) => `<div style="display:flex;align-items:center;gap:8px;margin:4px 0;"><span style="background:#333;color:#ffd700;width:24px;height:24px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:0.85rem;flex-shrink:0;">${k}</span><span style="color:#ddd;font-size:0.88rem;">${v}</span></div>`).join('')}
-                <div style="border-top:1px solid #444;margin:14px 0;"></div>
-                <p style="color:#aaa;font-size:0.75rem;margin:0 0 6px;text-transform:uppercase;">${t.dispType}</p>
-				${[
-					['1-2', '#4caf50', t.types[0]],
-					['3-5', '#2196f3', t.types[1]],
-					['6-8', '#ff9800', t.types[2]],
-					['9-0', '#e91e63', t.types[3]]
-				].map(([k, c, v]) => `
-					<div style="display:flex;align-items:center;gap:8px;margin:4px 0;">
-						<span style="background:#333;color:#ffd700;width:30px;height:24px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:0.75rem;flex-shrink:0;">${k}</span>
-						<span style="color:${c};font-size:0.85rem;">${v}</span>
-					</div>
-`).join('')}
+        <button onclick="forceCloseMinigame()" class="close-btn" style="position:fixed; top:10px; right:10px; z-index:10001; background:#ff4444; border:none; color:white; border-radius:5px; width:40px; height:40px; cursor:pointer;">×</button>
+        <div style="display:flex; width:100%; min-height:100%; flex-wrap: wrap;">
+            <div style="width:200px; background:rgba(255,255,255,0.04); border-right:1px solid #333; padding:18px; flex-shrink:0;">
+                <p style="color:#ffd700; font-weight:bold; font-size:1rem; margin:0 0 14px; text-align:center;">📖 ${t.dispManual}</p>
+                <p style="color:#aaa; font-size:0.75rem; text-transform:uppercase;">${t.dispFrom}</p>
+                ${cities.map((v, k) => `<div style="display:flex; align-items:center; gap:8px; margin:4px 0;"><span style="background:#333; color:#ffd700; width:24px; height:24px; border-radius:5px; display:flex; align-items:center; justify-content:center; font-weight:bold; font-size:0.85rem;">${k}</span><span style="color:#ddd; font-size:0.88rem;">${v}</span></div>`).join('')}
+                <div style="border-top:1px solid #444; margin:14px 0;"></div>
+                <p style="color:#aaa; font-size:0.75rem; text-transform:uppercase;">${t.dispType}</p>
+                ${[['1-2', '#4caf50', t.types[0]], ['3-5', '#2196f3', t.types[1]], ['6-8', '#ff9800', t.types[2]], ['9-0', '#e91e63', t.types[3]]].map(([k, c, v]) => `<div style="display:flex; align-items:center; gap:8px; margin:4px 0;"><span style="background:#333; color:#ffd700; width:30px; height:24px; border-radius:5px; display:flex; align-items:center; justify-content:center; font-weight:bold; font-size:0.75rem;">${k}</span><span style="color:${c}; font-size:0.85rem;">${v}</span></div>`).join('')}
             </div>
-            <div style="flex:1;display:flex;flex-direction:column;align-items:center;padding:20px;overflow-y:auto;">
-                <div style="text-align:center;margin-bottom:18px;">
-                    <h2 style="color:#ffd700;font-size:1.8rem;margin:0;">📋 ${t.mgDispName.toUpperCase()}</h2>
-                    <p style="color:#888;font-size:0.85rem;margin:5px 0 0;">${t.mgDispDesc}</p>
+            <div style="flex:1; display:flex; flex-direction:column; align-items:center; padding:20px; min-width:300px;">
+                <div style="text-align:center; margin-bottom:18px;">
+                    <h2 style="color:#ffd700; font-size:1.8rem; margin:0;">📋 ${t.mgDispName.toUpperCase()}</h2>
                 </div>
-                <div style="display:flex;gap:14px;margin-bottom:18px;flex-wrap:wrap;justify-content:center;">
-                    <div style="background:rgba(255,255,255,0.07);padding:8px 20px;border-radius:20px;text-align:center;min-width:75px;">
-                        <div style="color:#aaa;font-size:0.7rem;">${t.dispScore}</div>
-                        <div id="disp-score" style="color:#ffd700;font-size:1.4rem;font-weight:bold;">0</div>
+                <div style="display:flex; gap:14px; margin-bottom:18px; flex-wrap:wrap; justify-content:center;">
+                    <div style="background:rgba(255,255,255,0.07); padding:8px 20px; border-radius:20px; text-align:center;">
+                        <div style="color:#aaa; font-size:0.7rem;">${t.dispScore}</div>
+                        <div id="disp-score" style="color:#ffd700; font-size:1.4rem; font-weight:bold;">0</div>
                     </div>
-                    <div style="background:rgba(255,255,255,0.07);padding:8px 20px;border-radius:20px;text-align:center;min-width:75px;">
-                        <div style="color:#aaa;font-size:0.7rem;">${t.dispTime}</div>
-                        <div id="disp-timer" style="color:#ff9800;font-size:1.4rem;font-weight:bold;">${t.dispTime}</div>
-                    </div>
-                    <div style="background:rgba(255,255,255,0.07);padding:8px 20px;border-radius:20px;text-align:center;min-width:75px;">
-                        <div style="color:#aaa;font-size:0.7rem;">${t.dispMiss}</div>
-                        <div id="disp-misses" style="color:#ff4444;font-size:1.4rem;font-weight:bold;">0/2</div>
-                    </div>
-                    <div style="background:rgba(255,255,255,0.07);padding:8px 20px;border-radius:20px;text-align:center;min-width:75px;">
-                        <div style="color:#aaa;font-size:0.7rem;">${t.dispCombo}</div>
-                        <div id="disp-streak" style="color:#4caf50;font-size:1.4rem;font-weight:bold;">x1</div>
-                    </div>
-                    <div style="background:rgba(255,215,0,0.1);padding:8px 20px;border-radius:20px;text-align:center;min-width:90px;border:1px solid #ffd700;">
-                        <div style="color:#ffd700;font-size:0.65rem;">${t.dispBest}</div>
-                        <div style="color:#ffd700;font-size:1.2rem;font-weight:bold;">${miniGameStats.dispatcher.bestStreak}</div>
+                    <div style="background:rgba(255,255,255,0.07); padding:8px 20px; border-radius:20px; text-align:center;">
+                        <div style="color:#aaa; font-size:0.7rem;">${t.dispTime}</div>
+                        <div id="disp-timer" style="color:#ff9800; font-size:1.4rem; font-weight:bold;">45</div>
                     </div>
                 </div>
-                <div style="background:linear-gradient(135deg,#1a1a2e,#16213e);border:2px solid #ffd700;border-radius:16px;padding:22px 40px;text-align:center;margin-bottom:18px;width:100%;max-width:420px;">
-                    <div style="color:#aaa;font-size:0.78rem;letter-spacing:2px;margin-bottom:8px;">${t.mgRouteName} №</div>
-                    <div id="disp-ticket" style="font-size:4rem;font-weight:bold;color:#ffd700;letter-spacing:14px;font-family:monospace;text-shadow:0 0 10px rgba(255,215,0,0.4);">---</div>
+                <div style="background:linear-gradient(135deg,#1a1a2e,#16213e); border:2px solid #ffd700; border-radius:16px; padding:22px 40px; text-align:center; margin-bottom:18px; width:100%; max-width:420px;">
+                    <div id="disp-ticket" style="font-size:4rem; font-weight:bold; color:#ffd700; letter-spacing:14px; font-family:monospace;">---</div>
                 </div>
-                <div id="disp-options" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;width:100%;max-width:560px;"></div>
-                <div id="disp-feedback" style="height:30px;margin-top:14px;font-size:1rem;font-weight:bold;text-align:center;"></div>
-                <div style="margin-top:16px;padding:12px 20px;background:rgba(76,175,80,0.1);border-radius:10px;border:1px solid #4caf50;text-align:center;">
-                    <span style="color:#4caf50;font-weight:bold;">💰 ~${formatMoney(baseReward)} ₽ &nbsp;|&nbsp; ${t.dispHint}</span>
-                </div>
+                <div id="disp-options" style="display:grid; grid-template-columns:1fr 1fr; gap:12px; width:100%; max-width:560px;"></div>
+                <div id="disp-feedback" style="height:30px; margin-top:14px; font-weight:bold;"></div>
             </div>
         </div>
     `;
@@ -923,36 +883,25 @@ function startRouteGame() {
     closeAllMenus();
     document.getElementById('overlay').classList.add('active');
     
-    const baseReward = getSecPower() * 22;
-    const passengersPerStop = Math.max(1, Math.floor(getSecPower() / 8));
-
     const gameArea = document.createElement('div');
     gameArea.id = 'minigame-area';
-    // Добавляем класс для скролла, если контент не влезет
     gameArea.innerHTML = `
-        <button onclick="forceCloseMinigame()" style="position:fixed;top:10px;right:10px;background:#ff4444;border:none;color:white;font-size:1.5rem;width:40px;height:40px;border-radius:5px;cursor:pointer;z-index:10001;">×</button>
-        
-        <div class="route-header-compact" style="position:relative; width:90%; margin: 10px auto; text-align:center; background:rgba(0,0,0,0.82); padding:10px; border-radius:15px; border:2px solid #ffd700;">
-            <h2 style="color:#ffd700; font-size:1.2rem; margin:0;">${t.mgRouteName}№42</h2>
-            <div style="display:flex; gap:15px; justify-content:center; flex-wrap:wrap;">
-                <p style="color:#00ffcc; font-size:0.9rem; margin:5px 0;">👥 <span id="passengers">0</span></p>
-                <p style="color:#ff4444; font-size:0.9rem; margin:5px 0;">❌ <span id="missed">0</span>/2</p>
-                <p style="color:#ff9800; font-size:0.9rem; margin:5px 0;">⚡ <span id="speed-display">1.0</span>x</p>
+        <button onclick="forceCloseMinigame()" class="close-btn" style="position:fixed; top:10px; right:10px; z-index:10001; background:#ff4444; border:none; color:white; border-radius:5px; width:40px; height:40px; cursor:pointer;">×</button>
+        <div class="route-game-container" style="margin-top: 50px;">
+            <div style="background:rgba(0,0,0,0.6); padding:15px; border-radius:15px; border:1px solid #ffd700; width:80%; text-align:center;">
+                <p style="font-size:1.5rem; margin:0;">👥 <span id="passengers">0</span> | ❌ <span id="missed">0</span>/2</p>
             </div>
-        </div>
+            
+            <div id="route-road" style="width:90%; height:100px; background:#333; position:relative; border-radius:10px; border:4px solid #555; overflow:hidden;">
+                <div id="route-bus" style="position:absolute; left:0; bottom:15px; font-size:3rem; transition: left 0.05s linear;">🚌</div>
+                <div style="position:absolute; right:15%; bottom:15px; font-size:2.5rem;">🚏</div>
+            </div>
 
-        <div id="route-road" style="position:relative; width:90%; height:80px; background:linear-gradient(to bottom,#555,#333); margin: 20px auto; border-radius:10px; overflow:hidden; border:3px solid #666;">
-            <div style="position:absolute; bottom:5px; width:100%; height:2px; background:repeating-linear-gradient(90deg,#fff 0,#fff 20px,transparent 20px,transparent 40px);"></div>
-            <div id="route-bus" style="position:absolute; left:0; bottom:10px; font-size:3rem; transition: left 0.05s linear;">🚌</div>
-            <div style="position:absolute; right:15%; bottom:0; font-size:2rem;">🚏</div>
-        </div>
-
-        <div style="text-align:center; padding-bottom: 20px;">
-            <button id="stop-btn" style="padding:15px 50px; font-size:1.2rem; background:linear-gradient(135deg,#ff9800,#f57c00); color:white; border:none; border-radius:10px; font-weight:bold; cursor:pointer;">${t.routeStopBtn} 🛑</button>
+            <button id="stop-btn" style="width:250px; height:80px; font-size:1.8rem; background:#ff9800; color:white; border:none; border-radius:20px; font-weight:bold; box-shadow: 0 10px #e68a00; cursor:pointer; active {transform: translateY(4px); box-shadow: 0 5px #e68a00;}">
+                ${t.routeStopBtn} 🛑
+            </button>
         </div>
     `;
-
-    gameArea.style.cssText = 'position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:2000;';
     document.body.appendChild(gameArea);
 
     let busPos = 0, passengers = 0, missed = 0, gameActive = true;
