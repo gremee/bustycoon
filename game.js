@@ -587,28 +587,31 @@ function createFloatingText(x, y, value) {
 // ==========================================
 function showWelcomeBack() {
     const li = currentBusIdx >= 8 ? 3 : currentBusIdx >= 5 ? 2 : currentBusIdx >= 2 ? 1 : 0;
-    const t = i18n[currentLang]; // Берём словарь текущего языка
+    const t = i18n[currentLang];
     
+    // Удаляем старый модал, если он вдруг остался
+    const oldModal = document.getElementById('welcome-back-modal');
+    if (oldModal) oldModal.remove();
+
     const modal = document.createElement('div');
     modal.id = 'welcome-back-modal';
-    modal.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);z-index:9998;display:flex;align-items:center;justify-content:center;';
+    modal.className = 'welcome-overlay'; // Добавляем класс для управления из CSS
     
     modal.innerHTML = `
-        <div style="background:#1e1e1e;padding:40px;border-radius:20px;border:3px solid #ffd700;text-align:center;max-width:400px;width:90%;box-shadow:0 0 40px rgba(255,215,0,0.2);">
-            <div style="font-size:3rem;margin-bottom:10px;">🚌</div>
-            <h2 style="color:#ffd700;margin:0 0 10px;font-size:1.8rem;">${t.welcomeBack}</h2>
-            <p style="color:#ccc;margin:0 0 20px;">
-                ${t.stations[li]} <span style="color:#ffd700;">${t.welcomeWaited}</span>
+        <div class="welcome-content">
+            <div class="welcome-emoji">🚌</div>
+            <h2 class="welcome-title">${t.welcomeBack}</h2>
+            <p class="welcome-desc">
+                ${t.stations[li]} <span class="accent-text">${t.welcomeWaited}</span>
             </p>
-            <div style="background:#2a2a2a;border-radius:12px;padding:15px;margin-bottom:20px;">
-                <p style="color:#aaa;margin:0 0 5px;font-size:0.85rem;">${t.welcomeCurrent}</p>
-                <p style="color:#00ffcc;font-size:1.2rem;font-weight:bold;margin:0;">🚌 ${buses[currentBusIdx].name}</p>
-                <p style="color:#aaa;font-size:0.85rem;margin:8px 0 0;">
-                    ${t.balanceLabel} <b style="color:#ffd700;">${formatMoney(balance)} ₽</b>
+            <div class="welcome-info-card">
+                <p class="info-label">${t.welcomeCurrent}</p>
+                <p class="info-bus-name">🚌 ${buses[currentBusIdx].name}</p>
+                <p class="info-balance">
+                    ${t.balanceLabel} <b class="accent-text">${formatMoney(balance)} ₽</b>
                 </p>
             </div>
-            <button onclick="document.getElementById('welcome-back-modal').remove()" 
-                    style="padding:14px 0;width:100%;background:#28a745;color:white;border:none;border-radius:10px;font-size:1.1rem;font-weight:bold;cursor:pointer;">
+            <button onclick="document.getElementById('welcome-back-modal').remove()" class="welcome-start-btn">
                 ${t.startWork}
             </button>
         </div>
