@@ -953,72 +953,35 @@ function startRouteGame() {
     document.getElementById('stop-btn').onclick = attemptStop;
 }
 
-function endRouteGame(passengers, missed, baseReward) {
+function endRouteGame(passengers, baseReward) {
     const t = i18n[currentLang];
+    const total = passengers * 10;
+    const bonus = passengers >= 10 ? Math.floor(baseReward * 0.5) : 0;
+    balance += (total + bonus);
     
-    // --- ВОЗВРАЩАЕМ ЛОГИКУ РАСЧЕТА ---
-    // Базовая награда за каждого пассажира
-    const rewardPerPassenger = Math.floor(baseReward / 10);
-    const baseTotal = passengers * rewardPerPassenger;
-    
-    // Проверка на "Идеальную игру" (0 пропусков и хотя бы 5 пассажиров)
-    const perfect = missed === 0 && passengers >= 5;
-    const perfectBonus = perfect ? Math.floor(baseReward * 0.5) : 0;
-    
-    const finalReward = baseTotal + perfectBonus;
-    
-    // Начисляем в баланс
-    balance += finalReward;
-    
-    // Сохраняем статистику
-    miniGameStats.route.totalGames++;
-    if (passengers > miniGameStats.route.bestScore) {
-        miniGameStats.route.bestScore = passengers;
-    }
-
     const gameArea = document.getElementById('minigame-area');
     if (gameArea) {
-        // Очищаем экран игры и показываем карточку результата по центру
+        // Очищаем всё и вставляем карточку с результатами
         gameArea.innerHTML = `
-            <div class="mg-window-card" style="text-align:center; max-width: 400px;">
-                <h2 style="color:${perfect ? '#ffd700' : '#4caf50'}; font-size:2rem; margin-bottom:15px;">
-                    ${perfect ? '🏆 PERFECT!' : '✅ ' + t.routeFinished}
-                </h2>
-                
-                <div style="background:rgba(255,255,255,0.05); border-radius:15px; padding:20px; margin-bottom:20px; text-align:left;">
-                    <div style="display:flex; justify-content:space-between; margin-bottom:10px; border-bottom:1px solid #333; padding-bottom:5px;">
-                        <span style="color:#aaa;">${t.dispTotalRoutes}:</span>
-                        <span style="color:#00ffcc; font-weight:bold;">${passengers}</span>
-                    </div>
-                    
-                    <div style="display:flex; justify-content:space-between; margin-bottom:10px; border-bottom:1px solid #333; padding-bottom:5px;">
-                        <span style="color:#aaa;">Базовая оплата:</span>
-                        <span style="color:#fff;">+${formatMoney(baseTotal)} ₽</span>
-                    </div>
-
-                    ${perfect ? `
-                    <div style="display:flex; justify-content:space-between; margin-bottom:10px; border-bottom:1px solid #333; padding-bottom:5px;">
-                        <span style="color:#ffd700; font-weight:bold;">Бонус за точность:</span>
-                        <span style="color:#ffd700; font-weight:bold;">+${formatMoney(perfectBonus)} ₽</span>
-                    </div>
-                    ` : ''}
-
-                    <div style="display:flex; justify-content:space-between; margin-top:15px; padding-top:10px;">
-                        <span style="font-weight:bold; font-size:1.1rem;">ИТОГО:</span>
-                        <span style="color:#ffd700; font-size:1.4rem; font-weight:bold;">+${formatMoney(finalReward)} ₽</span>
-                    </div>
+            <div class="game-results-card" style="background:#222; padding:30px; border-radius:20px; border:3px solid #ffd700; width:90%; max-width:400px; text-align:center; margin: 20px auto;">
+                <h2 style="color:#ffd700; margin:0 0 15px;">🏁 ${t.routeFinished}</h2>
+                <div style="background:#333; padding:15px; border-radius:10px; margin-bottom:20px; text-align:left; font-size:0.9rem;">
+                    <p>👥 ${t.routeTransported}: <span style="color:#00ffcc;">${passengers}</span></p>
+                    <p>💰 ${t.routeMoneyForPass}: ${total} ₽</p>
+                    ${bonus > 0 ? `<p style="color:#4caf50;">🎁 ${t.routeBonus}: +${bonus} ₽</p>` : ''}
+                    <hr style="border:0; border-top:1px solid #555;">
+                    <p style="font-size:1.2rem; color:#ffd700; text-align:center;">${t.mgTotal}: ${total + bonus} ₽</p>
                 </div>
-
-                <button onclick="closeMinigame()" class="welcome-btn" style="width:100%; padding:15px; font-size:1.2rem; background:#28a745; border:none; border-radius:10px; color:white; font-weight:bold; cursor:pointer;">
+                <button onclick="closeMinigame()" style="width:100%; padding:15px; background:#28a745; color:white; border:none; border-radius:10px; font-weight:bold; font-size:1.1rem; cursor:pointer;">
                     ${t.continueBtn}
                 </button>
             </div>
         `;
     }
-    
     updateUI();
     saveProgress();
 }
+
 function closeMinigame() {
     // 1. Убираем элементы мини-игры с экрана (твой оригинальный код)
     const gameArea = document.getElementById('minigame-area');
