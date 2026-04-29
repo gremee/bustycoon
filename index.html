@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Автостанция Кликер</title>
+    <script src="https://yandex.ru/games/sdk/v2"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div id="game-container">
+        <!-- ЭКРАН ВХОДА -->
+        <div id="start-screen">
+			<h1 data-i18n="gameTitle">АВТОСТАНЦИЯ<br>КЛИКЕР</h1>
+			<p data-i18n="gameSubtitle">Стань директором Слободости</p>
+			<button id="play-btn">▶ <span data-i18n="playBtn">ИГРАТЬ</span></button>
+		</div>
+
+        <!-- КНОПКА НАСТРОЕК -->
+        <button id="settings-btn" onclick="openSettings()">⚙️</button>
+		<!-- Бонусная реклама -->
+		<div id="ad-bonus-container" style="display:none;">
+			<button class="reward-btn" id="reward-btn" data-i18n="bonusIncome">🎁 x2 ДОХОД (3 МИН)</button>
+		</div>
+        <!-- ОКНО НАСТРОЕК -->
+        <div id="settings-window" class="modal-window">
+		<div class="modal-header">
+			<h3 data-i18n="settingsTitle">Настройки</h3>
+			<button class="close-btn" onclick="closeSettings()">×</button>
+		</div>
+		<div class="modal-content">
+			<div class="setting-row">
+				<label data-i18n="musicVol">🎵 Громкость музыки</label>
+				<input type="range" id="music-volume" min="0" max="1" step="0.05" value="0.4">
+			</div>
+			<div class="setting-row">
+				<label data-i18n="sfxVol">🔊 Громкость эффектов</label>
+				<input type="range" id="sfx-volume" min="0" max="1" step="0.05" value="0.2">
+			</div>
+			<div class="setting-row">
+				<label data-i18n="langLabel">🌐 Язык (Language)</label>
+            <div class="lang-buttons">
+                <button type="button" class="lang-btn" data-lang="ru" onclick="changeLanguage('ru')">Русский</button>
+                <button type="button" class="lang-btn" data-lang="en" onclick="changeLanguage('en')">English</button>
+            </div>
+				<button id="change-music-btn" onclick="nextTrack()" style="background: #444; color: #ffd700; border: 1px solid #ffd700;">
+					⏭ <span data-i18n="changeMusic">Сменить музыку</span>
+				</button>
+			</div>
+			<div class="setting-row" style="margin-top: 20px; border-top: 1px solid #444; padding-top: 15px;">
+				<button id="reset-btn" onclick="resetProgress()" data-i18n="resetBtn">🗑️ Сбросить прогресс</button>
+			</div>
+			</div>
+		</div>
+
+        <div id="overlay" onclick="closeAllMenus(event)"></div>
+
+        <!-- ОБУЧЕНИЕ -->
+        <div id="tutorial-window" class="modal-window">
+            <div class="modal-header" style="justify-content: center;">
+                <h3 data-i18n="tutorialTitle">Добро пожаловать в Слободость!</h3>
+            </div>
+            <div class="modal-content" style="text-align: center;">
+                <p data-i18n="tutorialText1">Вы назначены новым директором местной автостанции.</p>
+                <p data-i18n="tutorialText2">Ваша цель — превратить её из деревенской остановки в футуристический хаб.</p>
+                <div style="text-align: left; background: #333; padding: 15px; border-radius: 10px; margin-top: 15px;">
+                    <p style="margin: 5px 0;">👆 <span data-i18n="tutorialTip1"><b>Кликайте</b> по экрану для заработка.</span></p>
+                    <p style="margin: 5px 0;">🚌 <span data-i18n="tutorialTip2"><b>Покупайте</b> новые автобусы.</span></p>
+                    <p style="margin: 5px 0;">🛠️ <span data-i18n="tutorialTip3"><b>Улучшайте</b> их для пассивного дохода.</span></p>
+                    <p style="margin: 5px 0; color: #ff4444; font-size: 0.85rem;" data-i18n="tutorialWarn">⚠️ При покупке нового автобуса старые улучшения сбрасываются!</p>
+                </div>
+                <button class="buy-bus-btn" style="margin-top: 20px;" onclick="startGame()" data-i18n="startWorkBtn">Приступить к работе</button>
+            </div>
+        </div>
+
+        <!-- СТАТИСТИКА -->
+        <header id="stats-panel">
+            <div class="stat-item">
+                <span class="label" data-i18n="balanceLabel">Баланс:</span>
+                <span id="balance" class="value">0</span> <span class="currency">₽</span>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat-group">
+                <div class="stat-item mini">
+                    <span class="label" data-i18n="perSecLabel">В сек:</span>
+                    <span id="per-sec" class="value">1</span> ₽
+                </div>
+                <div class="stat-item mini">
+                    <span class="label" data-i18n="perClickLabel">За клик:</span>
+                    <span id="per-click" class="value">1</span> ₽
+                </div>
+            </div>
+        </header>
+
+        <!-- МЕНЮ -->
+        <!-- МЕНЮ НАВИГАЦИИ -->
+		<div id="main-navigation" class="nav-buttons">
+			<button class="nav-btn" onclick="openMenu('upgrades-window')">
+				<span class="icon">🛠️</span>
+				<span data-i18n="navUpgrade">ОБНОВЛЕНИЕ</span>
+			</button>
+			<button class="nav-btn" onclick="openMenu('shop-window')">
+				<span class="icon">🚌</span>
+				<span data-i18n="navShop">МАГАЗИН</span>
+			</button>
+			<button class="nav-btn" onclick="openMenu('minigames-window')">
+				<span class="icon">🧩</span>
+				<span data-i18n="navMinigames">МИНИ-ИГРЫ</span>
+			</button>
+		</div>
+
+        <!-- АВТОБУС -->
+        <div id="bus-wrapper">
+            <img id="current-bus-img" src="images/buses/paz-672.png" alt="Bus">
+        </div>
+
+        <!-- УРОВЕНЬ -->
+        <footer id="station-footer">
+            <div class="station-details">
+                <h2 id="level-name"></h2>
+                <p id="level-num">Уровень 1</p>
+                <p id="current-bus-label" style="margin-top: 8px; color: #ffd700; font-size: 1.1rem; font-weight: bold;"></p>
+            </div>
+        </footer>
+
+        <!-- УЛУЧШЕНИЯ -->
+        <div id="upgrades-window" class="modal-window">
+            <div class="modal-header">
+                <h3 data-i18n="upgradesTitle">Улучшение автобуса</h3>
+                <button class="close-btn" onclick="closeAllMenus(event)">×</button>
+            </div>
+            <div class="modal-content">
+                <div class="upgrade-card" onclick="buyUpgrade('capacity')">
+                    <div class="upg-info">
+                        <h4 data-i18n="upgCapacity">Вместительность</h4>
+                        <p><span data-i18n="upgIncomeSec">Доход в сек</span> +10%</p>
+                    </div>
+                    <div class="upg-cost"><span id="btn-cap-cost">100</span> ₽</div>
+                </div>
+                <div class="upgrade-card" onclick="buyUpgrade('engine')">
+                    <div class="upg-info">
+                        <h4 data-i18n="upgEngine">Двигатель</h4>
+                        <p><span data-i18n="upgIncomeSec">Доход в сек</span> +10%</p>
+                    </div>
+                    <div class="upg-cost"><span id="btn-eng-cost">100</span> ₽</div>
+                </div>
+                <div class="upgrade-card" onclick="buyUpgrade('interior')">
+                    <div class="upg-info">
+                        <h4 data-i18n="upgInterior">Интерьер</h4>
+                        <p><span data-i18n="upgIncomeClick">Доход за клик</span> +15%</p>
+                    </div>
+                    <div class="upg-cost"><span id="btn-int-cost">100</span> ₽</div>
+                </div>
+                <p class="warning" data-i18n="upgWarning">⚠️ При покупке нового автобуса улучшения сбросятся!</p>
+            </div>
+        </div>
+
+        <!-- МАГАЗИН -->
+        <div id="shop-window" class="modal-window">
+            <div class="modal-header">
+                <h3 data-i18n="Autopark">Автопарк Слободости</h3>
+                <button class="close-btn" onclick="closeAllMenus(event)">×</button>
+            </div>
+            <div class="modal-content">
+                <div id="next-bus-preview">
+                    <div id="bus-available">
+                        <p style="margin:0 0 5px; color:#aaa;" data-i18n="nextModel">Следующая модель:</p>
+                        <h4 id="next-bus-name">ЛиАЗ-677</h4>
+                        <button class="buy-bus-btn" onclick="buyNextBus()">
+							<span class="buy-label" data-i18n="buyFor">КУПИТЬ ЗА</span> 
+							<span id="next-bus-price">500</span> ₽
+						</button>
+                    </div>
+                    <div id="bus-complete" style="display:none; text-align:center;">
+                        <h4 style="color:#ffd700; margin:0;" data-i18n="fleetFullTitle">🎉 Автопарк собран!</h4>
+                        <p style="color:#aaa; font-size:0.9rem;" data-i18n="fleetFullDesc">Вы достигли максимума</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- МИНИ-ИГРЫ -->
+        <div id="minigames-window" class="modal-window">
+			<div class="modal-header">
+				<h3 data-i18n="mgTitle">Мини-игры</h3>
+				<button class="close-btn" onclick="closeAllMenus(event)">×</button>
+			</div>
+			<div class="mg-container">
+				<div class="mg-card">
+					<h4 data-i18n="mgDispName">📋 Диспетчер</h4>
+					<p data-i18n="mgDispDesc">Расшифруй маршрут за 45 сек</p>
+					<button onclick="startTechInspectionGame()" class="buy-bus-btn">
+						<span class="play-icon">▶</span> 
+						<span data-i18n="playBtn">Играть</span>
+					</button>
+				</div>
+				<div class="mg-card">
+					<h4 data-i18n="mgRouteName">🚌 Маршрут</h4>
+					<p data-i18n="mgRouteDesc">Останавливайся вовремя</p>
+					<button onclick="startRouteGame()" class="buy-bus-btn">
+						<span class="play-icon">▶</span> 
+						<span data-i18n="playBtn">Играть</span>
+					</button>
+				</div>
+			</div>
+		</div>
+
+        <!-- АУДИО -->
+        <audio id="bg-music" src="music/background_music.mp3" loop></audio>
+        <audio id="coin-sound" src="music/coins-swoosh.mp3"></audio>
+        <audio id="purchase-sound" src="music/oplata.mp3"></audio>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+</html>
